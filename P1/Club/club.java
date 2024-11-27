@@ -2,7 +2,6 @@ package Club;
 
 import java.util.HashMap;
 
-import Country.country;
 import Player.player;
 
 public class club {
@@ -12,7 +11,6 @@ public class club {
     double maxHeight;
     int totalSalary;
     HashMap<String, player> players;
-    HashMap<String, country> countries;
 	
     public club(String name) {
 		this.name = name;
@@ -21,22 +19,16 @@ public class club {
         this.maxHeight = 0;
         this.totalSalary = 0;
         this.players = new HashMap<>();
-        this.countries = new HashMap<>();
 	}
 
     public void addPlayer(player newPlayer)
     {
-        players.put(newPlayer.getName(), newPlayer);
+        players.put(newPlayer.getName().toLowerCase(), newPlayer);
         
         maxAge = newPlayer.getAge()>maxAge?newPlayer.getAge():maxAge;
         maxHeight = (newPlayer.getHeight())>maxHeight?newPlayer.getHeight():maxHeight;
         maxSalary = (newPlayer.getSalary())>maxSalary?newPlayer.getSalary():maxSalary;
         totalSalary+=newPlayer.getSalary();
-    }
-
-    public void addCountry(country newCountry)
-    {
-        countries.putIfAbsent(newCountry.getName(), newCountry);
     }
 
 	public String getName() {

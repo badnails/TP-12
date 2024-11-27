@@ -15,7 +15,7 @@ public class country {
 
     public void addPlayer(player object)
     {
-        players.put(object.getName(), object);
+        players.put(object.getName().toLowerCase(), object);
         playerNum++;
     }
 
