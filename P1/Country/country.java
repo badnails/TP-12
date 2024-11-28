@@ -24,4 +24,9 @@ public class country {
         return name;
     }
 
+    public int getPlayerCount()
+    {
+        return playerNum;
+    }
+
 }   
