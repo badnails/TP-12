@@ -196,6 +196,7 @@ public class UI {
 
         player newPlayer = new player(playerName, countryName, playerAge, playerHeight, clubName, positionName, jerseyNumber, salary);
         data.addPlayer(newPlayer);
+        data.findClub(clubName.toLowerCase()).addPlayer(newPlayer);
         System.out.println("\n"+playerName+ " successfully added to database\n");
     }
 
