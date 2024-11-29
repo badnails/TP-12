@@ -28,4 +28,9 @@ public class country {
         return playerNum;
     }
 
+    public HashMap<String, player> getPlayers()
+    {
+        return players;
+    }
+
 }   

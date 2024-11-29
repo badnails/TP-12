@@ -75,9 +75,34 @@ public class DB {
         club clubObject = clubs.get(clubName.toLowerCase());
         if(clubObject==null)
         {
+            if(clubName.toLowerCase().equals("any"))
+            {
+                country countryObject = countries.get(countryName.toLowerCase());
+                if(countryObject == null)
+                {
+                    System.out.println("Country "+countryName+" not present in database ---\n");
+                    return;
+                }
+                int index = 1;
+
+                for(player temp: countryObject.getPlayers().values())
+                {
+                    System.out.println("("+(index++)+") ");
+                    temp.display();
+                }
+
+                System.out.println("\n(0) Back");
+        
+                int ret = sc.nextInt(); sc.nextLine();
+                while(ret!=0){
+                    ret = sc.nextInt(); sc.nextLine();
+                }
+                return;
+            }
             System.out.println("--- Club "+clubName+" not present in database ---\n");
             return;
         }
+        
         boolean exists = false;
         int index = 1;
         
