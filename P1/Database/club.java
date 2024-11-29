@@ -1,8 +1,6 @@
-package Club;
+package Database;
 
 import java.util.HashMap;
-
-import Player.player;
 
 public class club {
     String name;

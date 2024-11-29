@@ -1,4 +1,4 @@
-package Player;
+package Database;
 public class player {
     String name;
     String country;

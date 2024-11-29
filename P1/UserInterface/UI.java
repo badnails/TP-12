@@ -4,10 +4,10 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.Scanner;
 
-import Club.club;
-import Country.country;
 import Database.DB;
-import Player.player;
+import Database.club;
+import Database.country;
+import Database.player;
 
 public class UI {
     private static final String FILE_NAME = "sc/players.txt";
@@ -32,8 +32,18 @@ public class UI {
             System.out.println("(2) Search Clubs");
             System.out.println("(3) Add Player");
             System.out.println("(4) Exit System");
-            System.out.print("\nCommand: ");
-            state = sc.nextInt(); sc.nextLine();
+            
+            while(true)
+            {
+                System.out.print("\nCommand: ");
+                Integer buffer = userIntegerInput();
+                if(buffer!=null)
+                {
+                    state = buffer;
+                    break;
+                }
+            }
+            
             System.out.println();
 
             switch(state)
@@ -50,7 +60,7 @@ public class UI {
                     data.writeToFile(FILE_NAME);
                     break;
                 default:
-                    System.out.println("--- Invalid option ---\n");
+                    System.out.println("--- Invalid input (Valid options: 1-4) ---");
                     break;
             }
         }
@@ -69,8 +79,16 @@ public class UI {
             System.out.println("(5) Country-wise player count");
             System.out.println("(6) Back to Main Menu");
 
-            System.out.print("\nCommand: ");
-            state = sc.nextInt(); sc.nextLine();
+            while(true)
+            {
+                System.out.print("\nCommand: ");
+                Integer buffer = userIntegerInput();
+                if(buffer!=null)
+                {
+                    state = buffer;
+                    break;
+                }
+            }
             System.out.println();
 
             switch(state)
@@ -94,10 +112,28 @@ public class UI {
                     break;
                 case 4:
                     System.out.println("Enter Salary Range:");
-                    System.out.print("\tLower Limit: ");
-                    int lsalary = sc.nextInt(); sc.nextLine();
-                    System.out.print("\tUpper Limit: ");
-                    int rsalary = sc.nextInt(); sc.nextLine();
+                    int lsalary;
+                    while(true)
+                    {
+                        System.out.print("\tLower Limit: ");
+                        Integer buffer = userIntegerInput();
+                        if(buffer!=null)
+                        {
+                            lsalary = buffer;
+                            break;
+                        }
+                    }
+                    int rsalary;
+                    while(true)
+                    {
+                        System.out.print("\tUpper Limit: ");
+                        Integer buffer = userIntegerInput();
+                        if(buffer!=null)
+                        {
+                            rsalary = buffer;
+                            break;
+                        }
+                    }
                     data.searchBySalary(lsalary, rsalary);
                     break;
                 case 5:
@@ -106,7 +142,7 @@ public class UI {
                 case 6:
                     break;
                 default:
-                    System.out.println("--- Invalid Input ---");
+                    System.out.println("--- Invalid Input (Valid Options: 1-6) ---");
                     break;
                 
             }
@@ -124,8 +160,16 @@ public class UI {
             System.out.println("(4) Total yearly salary of a club");
             System.out.println("(5) Back to Main Menu");
 
-            System.out.print("\nCommand: ");
-            state = sc.nextInt(); sc.nextLine();
+            while(true)
+            {
+                System.out.print("\nCommand: ");
+                Integer buffer = userIntegerInput();
+                if(buffer!=null)
+                {
+                    state = buffer;
+                    break;
+                }
+            }
             System.out.println();
 
             switch(state)
@@ -153,7 +197,7 @@ public class UI {
                 case 5:
                     break;
                 default:
-                    System.out.println("--- Invalid Input ---");
+                    System.out.println("--- Invalid Input (Valid Options 1-5)---");
                     break;
             }
         }
@@ -176,8 +220,17 @@ public class UI {
             country newCountry = new country(countryName);
             data.addCountry(newCountry);
         }
-        System.out.print("Enter Age: ");
-        int playerAge = sc.nextInt(); sc.nextLine();
+        int playerAge;
+        while(true)
+        {
+            System.out.print("Enter Age: ");
+            Integer buffer = userIntegerInput();
+            if(buffer!=null)
+            {
+                playerAge = buffer;
+                break;
+            }
+        }
         System.out.print("Enter Height: ");
         Double playerHeight = sc.nextDouble(); sc.nextLine();
         System.out.print("Enter Club Name: ");
@@ -189,14 +242,32 @@ public class UI {
         }
         System.out.print("Enter Position: ");
         String positionName = sc.nextLine();
-        System.out.print("Enter Jersey Number: ");
-        int jerseyNumber = sc.nextInt(); sc.nextLine();
-        System.out.print("Enter Salary: ");
-        int salary = sc.nextInt(); sc.nextLine();
-
+        int jerseyNumber;
+        while(true)
+        {
+            System.out.print("Enter Jersey Number: ");
+            Integer buffer = userIntegerInput();
+            if(buffer!=null)
+            {
+                jerseyNumber = buffer;
+                break;
+            }
+        }
+        int salary;
+        while(true)
+        {
+            System.out.print("Enter Salary: ");
+            Integer buffer = userIntegerInput();
+            if(buffer!=null)
+            {
+                salary = buffer;
+                break;
+            }
+        }
         player newPlayer = new player(playerName, countryName, playerAge, playerHeight, clubName, positionName, jerseyNumber, salary);
         data.addPlayer(newPlayer);
         data.findClub(clubName.toLowerCase()).addPlayer(newPlayer);
+        data.findCountry(countryName.toLowerCase()).addPlayer(newPlayer);
         System.out.println("\n"+playerName+ " successfully added to database\n");
     }
 
@@ -247,4 +318,19 @@ public class UI {
         }
         br.close();
     }
+    
+    Integer userIntegerInput()
+    {
+        try
+        {
+            return Integer.parseInt(sc.nextLine());
+        }
+        catch(NumberFormatException e)
+        {
+            System.out.println("--- Invalid Input (Not a valid Integer) ---");
+            return null;
+        }
+    }
 }
+
+

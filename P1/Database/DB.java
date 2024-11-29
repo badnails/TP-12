@@ -6,17 +6,10 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.util.Scanner;
 
-import Club.club;
-import Country.country;
-import Player.player;
-
 public class DB {
     private HashMap<String, player> players;
     private HashMap<String, club> clubs;
     private HashMap<String, country> countries;
-    private int playerNum;
-    private int clubNum;
-    private int countryNum;
 
     Scanner sc = new Scanner(System.in);
     
@@ -24,27 +17,21 @@ public class DB {
         players = new HashMap<>();
         clubs = new HashMap<>();
         countries = new HashMap<>();
-        playerNum = 0;
-        clubNum = 0;
-        countryNum = 0;
     }
 
     public void addPlayer(player ob)
     {
         players.putIfAbsent(ob.getName().toLowerCase(), ob);
-        playerNum++;
     }
 
     public void addClub(club ob)
     {
         clubs.putIfAbsent(ob.getName().toLowerCase(), ob);
-        clubNum++;
     }
 
     public void addCountry(country ob)
     {
         countries.putIfAbsent(ob.getName().toLowerCase(), ob);
-        countryNum++;
     }
 
     public player findPlayer(String name)

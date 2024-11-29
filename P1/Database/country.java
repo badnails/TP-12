@@ -1,6 +1,5 @@
-package Country;
+package Database;
 import java.util.HashMap;
-import Player.player;
 
 public class country {
     String name;
