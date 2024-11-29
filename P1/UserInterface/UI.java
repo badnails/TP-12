@@ -3,6 +3,7 @@ package UserInterface;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.Scanner;
+import java.io.FileNotFoundException;
 
 import Database.DB;
 import Database.club;
@@ -14,12 +15,13 @@ public class UI {
 
     int state;
     DB data;
-    Scanner sc = new Scanner(System.in);
+    Scanner sc;
 
     public UI()
     {
         state = -2025;
         this.data = new DB();
+        sc = new Scanner(System.in);
     }
 
     public void program()throws Exception
@@ -58,6 +60,7 @@ public class UI {
                     addPlayerMenu();
                 case 4:
                     data.writeToFile(FILE_NAME);
+                    sc.close();
                     break;
                 default:
                     System.out.println("--- Invalid input (Valid options: 1-4) ---");
@@ -272,51 +275,60 @@ public class UI {
     }
 
     void input() throws Exception{
-        BufferedReader br = new BufferedReader(new FileReader(FILE_NAME));
-        while(true)
+        try
         {
-            String line = br.readLine();
-            if(line == null) break;
-            String[] tokens = line.split(",", 8);
-
-            if(data.findPlayer(tokens[0].toLowerCase())==null)
+            BufferedReader br = new BufferedReader(new FileReader(FILE_NAME));
+            while(true)
             {
-                player newPlayer = new player(tokens[0], tokens[1], Integer.parseInt(tokens[2]), Double.parseDouble(tokens[3]), tokens[4], tokens[5], Integer.parseInt(tokens[6]), Integer.parseInt(tokens[7]));
-                data.addPlayer(newPlayer);
+                String line = br.readLine();
+                if(line == null) break;
+                String[] tokens = line.split(",", 8);
 
-                country countryObject = data.findCountry(tokens[1].toLowerCase());
-
-                if(countryObject==null)
+                if(data.findPlayer(tokens[0].toLowerCase())==null)
                 {
-                    countryObject = new country(tokens[1]);
-                    countryObject.addPlayer(newPlayer);
-                    data.addCountry(countryObject);
+                    player newPlayer = new player(tokens[0], tokens[1], Integer.parseInt(tokens[2]), Double.parseDouble(tokens[3]), tokens[4], tokens[5], Integer.parseInt(tokens[6]), Integer.parseInt(tokens[7]));
+                    data.addPlayer(newPlayer);
+
+                    country countryObject = data.findCountry(tokens[1].toLowerCase());
+
+                    if(countryObject==null)
+                    {
+                        countryObject = new country(tokens[1]);
+                        countryObject.addPlayer(newPlayer);
+                        data.addCountry(countryObject);
+                    }
+                    else
+                    {
+                        countryObject.addPlayer(newPlayer);
+                    }
+
+                    club clubObject = data.findClub(tokens[4].toLowerCase());
+
+                    if(clubObject==null)
+                    {
+                        clubObject = new club(tokens[4]);
+                        clubObject.addPlayer(newPlayer);
+                        data.addClub(clubObject);
+                    }
+                    else
+                    {
+                        clubObject.addPlayer(newPlayer);
+                    }
+                
                 }
                 else
                 {
-                    countryObject.addPlayer(newPlayer);
+                    System.out.println("--- Ignoring duplicate data for "+tokens[0]+" ---");
                 }
-
-                club clubObject = data.findClub(tokens[4].toLowerCase());
-
-                if(clubObject==null)
-                {
-                    clubObject = new club(tokens[4]);
-                    clubObject.addPlayer(newPlayer);
-                    data.addClub(clubObject);
-                }
-                else
-                {
-                    clubObject.addPlayer(newPlayer);
-                }
-            
             }
-            else
-            {
-                System.out.println("--- Ignoring duplicate data for "+tokens[0]+" ---");
-            }
+            br.close();
         }
-        br.close();
+        catch(FileNotFoundException e)
+        {  
+            System.out.println("File not found");
+            
+        }
+        
     }
     
     Integer userIntegerInput()
@@ -331,6 +343,7 @@ public class UI {
             return null;
         }
     }
+    
 }
 
 
