@@ -195,7 +195,7 @@ public class UI {
                 case 4:
                     System.out.print("Enter Club Name: ");
                     clubName = sc.nextLine();
-                    data.totalClubSalary(clubName);
+                    data.totalYearlyClubSalary(clubName);
                     break;
                 case 5:
                     break;
@@ -234,8 +234,22 @@ public class UI {
                 break;
             }
         }
-        System.out.print("Enter Height: ");
-        Double playerHeight = sc.nextDouble(); sc.nextLine();
+        
+        Double playerHeight;
+        while(true)
+        {
+            System.out.print("Enter Height: ");
+            try
+            {
+                playerHeight = Double.parseDouble(sc.nextLine());
+                break;
+            }
+            catch(NumberFormatException e)
+            {
+                System.out.println("--- Invalid Input ---");
+            }
+        }
+        
         System.out.print("Enter Club Name: ");
         String clubName = sc.nextLine();
         if(data.findClub(clubName)==null)

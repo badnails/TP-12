@@ -102,7 +102,7 @@ public class DB {
             System.out.println("--- Club "+clubName+" not present in database ---\n");
             return;
         }
-        
+
         boolean exists = false;
         int index = 1;
         
@@ -293,7 +293,7 @@ public class DB {
         }
     }
 
-    public void totalClubSalary(String clubName)
+    public void totalYearlyClubSalary(String clubName)
     {
         club clubObject = clubs.get(clubName.toLowerCase());
         if(clubObject==null)
@@ -301,7 +301,7 @@ public class DB {
             System.out.println("--- "+clubName+" not present in database ---\n");
             return;
         }
-        System.out.println("\nTotal salary of "+clubObject.getName()+": "+clubObject.getTotalSalary()+"\n");
+        System.out.println("\nTotal salary of "+clubObject.getName()+": "+clubObject.getTotalSalary()*52+"\n");
     }    
 
     public void writeToFile(String FILE_NAME) throws Exception

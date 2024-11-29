@@ -7,7 +7,7 @@ public class club {
     int maxSalary;
     int maxAge;
     double maxHeight;
-    int totalSalary;
+    long totalSalary;
     HashMap<String, player> players;
 	
     public club(String name) {
@@ -45,7 +45,7 @@ public class club {
 		return maxHeight;
 	}
 
-	public int getTotalSalary() {
+	public long getTotalSalary() {
 		return totalSalary;
 	}
 
