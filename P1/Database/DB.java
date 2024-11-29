@@ -51,22 +51,19 @@ public class DB {
 
     public void playerSearch(String name)
     {
-        System.out.println("\nInformation for "+name+":");
+        System.out.println("\nInformation for "+name+":\n");
 
         player playerObject = players.get(name.toLowerCase());
         if(playerObject==null)
         {
-            System.out.println("--- "+name+" not present in database ---\n");
+            System.out.println("--- "+name+" not present in database ---");
+            System.out.println("\n(Any Key) Back");
+            sc.nextLine();
             return;
         }
         playerObject.display();
-        System.out.println("\n(0) Back");
-        
-        
-        int ret = sc.nextInt(); sc.nextLine();
-        while(ret!=0){
-            ret = sc.nextInt(); sc.nextLine();
-        }
+        System.out.println("\n(Any Key) Back");
+        sc.nextLine();
     }
 
     public void searchClubCountry(String clubName, String countryName)
@@ -80,7 +77,9 @@ public class DB {
                 country countryObject = countries.get(countryName.toLowerCase());
                 if(countryObject == null)
                 {
-                    System.out.println("Country "+countryName+" not present in database ---\n");
+                    System.out.println("Country "+countryName+" not present in database ---");
+                    System.out.println("\n(Any Key) Back");
+                    sc.nextLine();
                     return;
                 }
                 int index = 1;
@@ -90,16 +89,13 @@ public class DB {
                     System.out.println("("+(index++)+") ");
                     temp.display();
                 }
-
-                System.out.println("\n(0) Back");
-        
-                int ret = sc.nextInt(); sc.nextLine();
-                while(ret!=0){
-                    ret = sc.nextInt(); sc.nextLine();
-                }
+                System.out.println("\n(Any Key) Back");
+                sc.nextLine();
                 return;
             }
-            System.out.println("--- Club "+clubName+" not present in database ---\n");
+            System.out.println("--- Club "+clubName+" not present in database ---");
+            System.out.println("\n(Any Key) Back");
+            sc.nextLine();
             return;
         }
 
@@ -121,14 +117,8 @@ public class DB {
             System.out.println("\n--- No Players found ---");
         }
 
-        System.out.println("\n(0) Back");
-        
-        
-        int ret = sc.nextInt(); sc.nextLine();
-        while(ret!=0){
-            ret = sc.nextInt(); sc.nextLine();
-        }
-
+        System.out.println("\n(Any Key) Back");
+        sc.nextLine();
     }
 
     public void searchByPosition(String positionName)
@@ -149,16 +139,11 @@ public class DB {
 
         if(exists == false)
         {
-            System.out.println("\n--- No Players found ---");
+            System.out.println("--- No Players found ---");
         }
 
-        System.out.println("\n(0) Back");
-        
-        
-        int ret = sc.nextInt(); sc.nextLine();
-        while(ret!=0){
-            ret = sc.nextInt(); sc.nextLine();
-        }
+        System.out.println("\n(Any Key) Back");
+        sc.nextLine();
     }
 
     public void searchBySalary(int lsalary, int rsalary)
@@ -182,13 +167,8 @@ public class DB {
             System.out.println("\n--- No Players found ---");
         }
 
-        System.out.println("\n(0) Back");
-        
-        
-        int ret = sc.nextInt(); sc.nextLine();
-        while(ret!=0){
-            ret = sc.nextInt(); sc.nextLine();
-        }
+        System.out.println("\n(Any Key) Back");
+        sc.nextLine();
     }
 
     public void countryPlayerCount()
@@ -201,12 +181,8 @@ public class DB {
             System.out.println("("+(index++)+") "+temp.getName()+": "+temp.getPlayerCount());
         }
 
-        System.out.println("\n(0) Back");
-        
-        int ret = sc.nextInt(); sc.nextLine();
-        while(ret!=0){
-            ret = sc.nextInt(); sc.nextLine();
-        }
+        System.out.println("\n(Any Key) Back");
+        sc.nextLine();
     }
 
     public void maxSalaryClub(String clubName)
@@ -229,12 +205,8 @@ public class DB {
             }
         }
 
-        System.out.println("\n(0) Back");
-        
-        int ret = sc.nextInt(); sc.nextLine();
-        while(ret!=0){
-            ret = sc.nextInt(); sc.nextLine();
-        }
+        System.out.println("\n(Any Key) Back");
+        sc.nextLine();
     }
 
     public void maxAgeClub(String clubName)
@@ -259,10 +231,8 @@ public class DB {
 
         System.out.println("\n(0) Back");
         
-        int ret = sc.nextInt(); sc.nextLine();
-        while(ret!=0){
-            ret = sc.nextInt(); sc.nextLine();
-        }
+        System.out.println("\n(Any Key) Back");
+        sc.nextLine();
     }
 
     public void maxHeightClub(String clubName)
@@ -285,12 +255,8 @@ public class DB {
             }
         }
 
-        System.out.println("\n(0) Back");
-        
-        int ret = sc.nextInt(); sc.nextLine();
-        while(ret!=0){
-            ret = sc.nextInt(); sc.nextLine();
-        }
+        System.out.println("\n(Any Key) Back");
+        sc.nextLine();
     }
 
     public void totalYearlyClubSalary(String clubName)
