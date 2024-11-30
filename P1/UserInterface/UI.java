@@ -2,8 +2,8 @@ package UserInterface;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.Scanner;
-import java.io.FileNotFoundException;
 
 import Database.DB;
 import Database.club;
@@ -58,6 +58,7 @@ public class UI {
                     break;
                 case 3:
                     addPlayerMenu();
+                    break;
                 case 4:
                     data.writeToFile(FILE_NAME);
                     sc.close();
@@ -109,8 +110,24 @@ public class UI {
                     data.searchClubCountry(clubName, countryName);
                     break;
                 case 3:
-                    System.out.print("Enter Position: ");
-                    String positionName = sc.nextLine();
+                    String[] positions = {"batsman", "bowler", "wicketkeeper", "allrounder"};
+                    String positionName;
+                    while(true)
+                    {
+                        System.out.print("Enter Position (Batsman, Bowler, Wicketkeeper, Allrounder): ");
+                        positionName = sc.nextLine();
+                        boolean found = false;
+                        for(String temp: positions)
+                        {
+                            if(positionName.equalsIgnoreCase(temp))
+                            {
+                                found = true;
+                                break;
+                            }
+                        }
+                        if(found) break;
+                        System.out.println("--- Not a valid position ---");
+                    }
                     data.searchByPosition(positionName);
                     break;
                 case 4:
@@ -122,8 +139,16 @@ public class UI {
                         Integer buffer = userIntegerInput();
                         if(buffer!=null)
                         {
-                            lsalary = buffer;
-                            break;
+                            if(buffer>=0)
+                            {
+                                lsalary = buffer;
+                                break;
+                            }
+                            else
+                            {
+                                System.out.println("--- Invalid salary ---");
+                            }
+
                         }
                     }
                     int rsalary;
@@ -133,8 +158,15 @@ public class UI {
                         Integer buffer = userIntegerInput();
                         if(buffer!=null)
                         {
-                            rsalary = buffer;
-                            break;
+                            if(buffer>=0)
+                            {
+                                rsalary = buffer;
+                                break;
+                            }
+                            else
+                            {
+                                System.out.println("--- Invalid salary ---");
+                            }
                         }
                     }
                     data.searchBySalary(lsalary, rsalary);
@@ -230,8 +262,15 @@ public class UI {
             Integer buffer = userIntegerInput();
             if(buffer!=null)
             {
-                playerAge = buffer;
-                break;
+                if(buffer>0)
+                {
+                    playerAge = buffer;
+                    break;
+                }
+                else
+                {
+                    System.out.println("---Invalid age ---");
+                }
             }
         }
         
@@ -239,14 +278,18 @@ public class UI {
         while(true)
         {
             System.out.print("Enter Height: ");
-            try
+            Double buffer = userDoubleInput();
+            if(buffer!=null)
             {
-                playerHeight = Double.parseDouble(sc.nextLine());
-                break;
-            }
-            catch(NumberFormatException e)
-            {
-                System.out.println("--- Invalid Input ---");
+                if(buffer>0)
+                {
+                    playerHeight = buffer;
+                    break;
+                }
+                else
+                {
+                    System.out.println("--- Invalid Height ---");
+                }
             }
         }
         
@@ -257,8 +300,24 @@ public class UI {
             club newClub = new club(clubName);
             data.addClub(newClub);
         }
-        System.out.print("Enter Position: ");
-        String positionName = sc.nextLine();
+        String positionName;
+        String[] positions = {"batsman", "bowler", "wicketkeeper", "allrounder"};
+        while(true)
+        {
+            System.out.print("Enter Position (Batsman, Bowler, Wicketkeeper, Allrounder): ");
+            positionName = sc.nextLine();
+            boolean found = false;
+            for(String temp: positions)
+            {
+                if(positionName.equalsIgnoreCase(temp))
+                {
+                    found = true;
+                    break;
+                }
+            }
+            if(found) break;
+            System.out.println("--- Not a valid position ---");
+        }
         int jerseyNumber;
         while(true)
         {
@@ -266,7 +325,20 @@ public class UI {
             Integer buffer = userIntegerInput();
             if(buffer!=null)
             {
-                jerseyNumber = buffer;
+                if(buffer>0)
+                {
+                    jerseyNumber = buffer;
+                    break;
+                }
+                else
+                {
+                    System.out.println("--- Jersey number can only be positive ---");
+                }
+            }
+            else
+            {
+                jerseyNumber = -1;
+                System.out.println("Jersey number set to -1");
                 break;
             }
         }
@@ -277,8 +349,15 @@ public class UI {
             Integer buffer = userIntegerInput();
             if(buffer!=null)
             {
-                salary = buffer;
-                break;
+                if(buffer>=0)
+                {
+                    salary = buffer;
+                    break;
+                }
+                else
+                {
+                    System.out.println("Invalid salary");
+                }
             }
         }
         player newPlayer = new player(playerName, countryName, playerAge, playerHeight, clubName, positionName, jerseyNumber, salary);
@@ -288,7 +367,7 @@ public class UI {
         System.out.println("\n"+playerName+ " successfully added to database\n");
     }
 
-    void input() throws Exception{
+    void input(){
         try
         {
             BufferedReader br = new BufferedReader(new FileReader(FILE_NAME));
@@ -297,10 +376,20 @@ public class UI {
                 String line = br.readLine();
                 if(line == null) break;
                 String[] tokens = line.split(",", 8);
+                
+                int jerseyNumber;
+                try
+                {
+                    jerseyNumber = Integer.parseInt(tokens[6]);
+                }
+                catch(NumberFormatException e)
+                {
+                    jerseyNumber = -1;
+                }
 
                 if(data.findPlayer(tokens[0].toLowerCase())==null)
                 {
-                    player newPlayer = new player(tokens[0], tokens[1], Integer.parseInt(tokens[2]), Double.parseDouble(tokens[3]), tokens[4], tokens[5], Integer.parseInt(tokens[6]), Integer.parseInt(tokens[7]));
+                    player newPlayer = new player(tokens[0], tokens[1], Integer.parseInt(tokens[2]), Double.parseDouble(tokens[3]), tokens[4], tokens[5], jerseyNumber, Integer.parseInt(tokens[7]));
                     data.addPlayer(newPlayer);
 
                     country countryObject = data.findCountry(tokens[1].toLowerCase());
@@ -337,10 +426,11 @@ public class UI {
             }
             br.close();
         }
-        catch(FileNotFoundException e)
+        catch(IOException e)
         {  
-            System.out.println("File not found");
-            
+            System.out.println("IOException at ");
+            e.printStackTrace();
+            return;
         }
         
     }
@@ -354,6 +444,19 @@ public class UI {
         catch(NumberFormatException e)
         {
             System.out.println("--- Invalid Input (Not a valid Integer) ---");
+            return null;
+        }
+    }
+
+    Double userDoubleInput()
+    {
+        try
+        {
+            return Double.parseDouble(sc.nextLine());
+        }
+        catch(NumberFormatException e)
+        {
+            System.out.println("--- Invalid Input ---");
             return null;
         }
     }

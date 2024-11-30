@@ -194,6 +194,8 @@ public class DB {
         if(clubObject==null)
         {
             System.out.println("--- "+clubName+" not present in database ---\n");
+            System.out.println("\n(Any Key) Back");
+            sc.nextLine();
             return;
         }
         for(player temp : clubObject.getPlayers().values())
@@ -218,6 +220,8 @@ public class DB {
         if(clubObject==null)
         {
             System.out.println("--- "+clubName+" not present in database ---\n");
+            System.out.println("\n(Any Key) Back");
+            sc.nextLine();
             return;
         }
         for(player temp : clubObject.getPlayers().values())
@@ -244,6 +248,8 @@ public class DB {
         if(clubObject==null)
         {
             System.out.println("--- "+clubName+" not present in database ---\n");
+            System.out.println("\n(Any Key) Back");
+            sc.nextLine();
             return;
         }
         for(player temp : clubObject.getPlayers().values())
@@ -265,9 +271,13 @@ public class DB {
         if(clubObject==null)
         {
             System.out.println("--- "+clubName+" not present in database ---\n");
+            System.out.println("\n(Any Key) Back");
+            sc.nextLine();
             return;
         }
         System.out.println("\nTotal salary of "+clubObject.getName()+": "+clubObject.getTotalSalary()*52+"\n");
+        System.out.println("\n(Any Key) Back");
+        sc.nextLine();
     }    
 
     public void writeToFile(String FILE_NAME) throws Exception
@@ -275,7 +285,7 @@ public class DB {
         BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_NAME));
         for(player temp: players.values())
         {
-            bw.write(temp.getName()+","+temp.getCountry()+","+temp.getAge()+","+temp.getHeight()+","+temp.getClub()+","+temp.getPosition()+","+temp.getJersey()+","+temp.getSalary());
+            bw.write(temp.getName()+","+temp.getCountry()+","+temp.getAge()+","+temp.getHeight()+","+temp.getClub()+","+temp.getPosition()+","+((temp.getJersey()==-1)?"":temp.getJersey())+","+temp.getSalary());
             bw.write(System.lineSeparator());
         }
         bw.close();
