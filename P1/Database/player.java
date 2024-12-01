@@ -55,7 +55,7 @@ public class player {
 
 	public void display()
 	{
-		System.out.print("[Name: "+name+"; Country: "+country+"; Age: "+age+"; Height: "+height+"; Club: "+club+"; Position: "+position+"; Jersey number: "+jersey+"; Weekly Salary: "+salary+"]\n");
+		System.out.print("[Name: "+name+"; Country: "+country+"; Age: "+age+"; Height: "+height+"; Club: "+club+"; Position: "+position+"; Jersey number: "+(jersey==-1?"N/A":jersey)+"; Weekly Salary: "+salary+"]\n");
 	}
 
     

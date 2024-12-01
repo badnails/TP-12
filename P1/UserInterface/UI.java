@@ -11,7 +11,7 @@ import Database.country;
 import Database.player;
 
 public class UI {
-    private static final String FILE_NAME = "sc/players.txt";
+    private static final String FILE_NAME = "players.txt";
 
     int state;
     DB data;
@@ -321,25 +321,19 @@ public class UI {
         int jerseyNumber;
         while(true)
         {
-            System.out.print("Enter Jersey Number: ");
+            System.out.print("Enter Jersey Number (-1 if N/A): ");
             Integer buffer = userIntegerInput();
             if(buffer!=null)
             {
-                if(buffer>0)
+                if(buffer>0 || buffer == -1)
                 {
                     jerseyNumber = buffer;
                     break;
                 }
                 else
                 {
-                    System.out.println("--- Jersey number can only be positive ---");
+                    System.out.println("--- Invalid Jersey Number ---");
                 }
-            }
-            else
-            {
-                jerseyNumber = -1;
-                System.out.println("Jersey number set to -1");
-                break;
             }
         }
         int salary;
