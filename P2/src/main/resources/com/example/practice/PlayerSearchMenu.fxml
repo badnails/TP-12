@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.practice.PlayerSearchMenuController">
+   <children>
+      <SplitPane dividerPositions="0.3219866071428572" layoutX="200.0" layoutY="120.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+               <children>
+                  <Text layoutX="57.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Player Name" />
+                  <TextField fx:id="TEXTBOX_SEARCH_NAME" layoutX="16.0" layoutY="66.0" />
+                  <Button fx:id="BUTTON_SEARCH" layoutX="65.0" layoutY="357.0" mnemonicParsing="false" onAction="#searchPlayer" text="Search" />
+                  <Button fx:id="BACK_TO_MAIN" layoutX="13.0" layoutY="14.0" mnemonicParsing="false" onAction="#backToMain" text="Back" />
+                  <Text layoutX="80.0" layoutY="113.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Age" />
+                  <TextField fx:id="TEXTBOX_SEARCH_AGE" layoutX="16.0" layoutY="117.0" />
+                  <Text layoutX="69.0" layoutY="162.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Country" />
+                  <TextField fx:id="TEXTBOX_SEARCH_COUNTRY" layoutX="16.0" layoutY="166.0" />
+                  <Text layoutX="51.0" layoutY="212.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Jersey Number" />
+                  <TextField fx:id="TEXTBOX_SEARCH_JN" layoutX="16.0" layoutY="216.0" />
+                  <Text layoutX="77.0" layoutY="261.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Salary" />
+                  <TextField fx:id="TEXTBOX_SEARCH_SALARY" layoutX="16.0" layoutY="265.0" />
+                  <Text layoutX="68.0" layoutY="313.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Position" />
+                  <TextField fx:id="TEXTBOX_SEARCH_POS" layoutX="15.0" layoutY="317.0" />
+               </children>
+            </AnchorPane>
+            <VBox>
+               <children>
+                  <Label fx:id="TEXT_SEARCH_FOUND_NUMBER" text="Enter Search Parameters">
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                  </Label>
+                  <ListView fx:id="psl">
+                     <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </padding>
+                  </ListView>
+               </children>
+            </VBox>
+        </items>
+      </SplitPane>
+   </children>
+</AnchorPane>
