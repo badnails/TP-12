@@ -255,7 +255,7 @@ public class DB {
     public void input(){
         try
         {
-            BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Dreamboat\\Desktop\\JavaFxDemo\\Practice\\src\\main\\java\\com\\example\\practice\\Database\\players.txt"));
+            BufferedReader br = new BufferedReader(new FileReader("src\\main\\java\\com\\example\\practice\\Database\\players.txt"));
             while(true)
             {
                 String line = br.readLine();
