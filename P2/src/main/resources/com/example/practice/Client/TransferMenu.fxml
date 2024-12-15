@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="516.0" prefWidth="618.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.practice.Client.TransferMenuController">
+   <children>
+      <SplitPane dividerPositions="0.3219866071428572" layoutX="200.0" layoutY="120.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <items>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="513.0" prefWidth="148.0">
+               <children>
+                  <Text layoutX="70.0" layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Player Name" />
+                  <TextField fx:id="TEXTBOX_SEARCH_NAME" layoutX="17.0" layoutY="75.0" prefHeight="25.0" prefWidth="175.0" promptText="ANY" />
+                  <Button fx:id="BUTTON_SEARCH" layoutX="135.0" layoutY="424.0" mnemonicParsing="false" onAction="#searchPlayer" text="Search" />
+                  <Button fx:id="BACK_TO_MAIN" layoutX="13.0" layoutY="14.0" mnemonicParsing="false" onAction="#backToMain" text="Back" />
+                  <Text layoutX="90.0" layoutY="122.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Age" />
+                  <TextField fx:id="TEXTBOX_SEARCH_AGE" layoutX="16.0" layoutY="135.0" prefHeight="25.0" prefWidth="67.0" promptText="ANY" />
+                  <Text layoutX="80.0" layoutY="180.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Country" />
+                  <TextField fx:id="TEXTBOX_SEARCH_COUNTRY" layoutX="16.0" layoutY="191.0" prefHeight="25.0" prefWidth="175.0" promptText="ANY" />
+                  <Text layoutX="64.0" layoutY="243.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Jersey Number" />
+                  <TextField fx:id="TEXTBOX_SEARCH_JN" layoutX="16.0" layoutY="253.0" prefHeight="25.0" prefWidth="175.0" promptText="ANY" />
+                  <Text layoutX="87.0" layoutY="298.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Salary" />
+                  <TextField fx:id="TEXTBOX_SEARCH_SALARY" layoutX="17.0" layoutY="310.0" prefHeight="25.0" prefWidth="79.0" promptText="LOWER LIMIT">
+                     <font>
+                        <Font size="9.0" />
+                     </font>
+                  </TextField>
+                  <Text layoutX="81.0" layoutY="369.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Position" />
+                  <TextField fx:id="TEXTBOX_SEARCH_POS" layoutX="23.0" layoutY="378.0" prefHeight="25.0" prefWidth="159.0" promptText="ANY" />
+                  <Button fx:id="BUTTON_SEARCH1" layoutX="27.0" layoutY="424.0" mnemonicParsing="false" onAction="#searchPlayer" text="Reset" />
+                  <TextField fx:id="TEXTBOX_SEARCH_SALARY1" layoutX="108.0" layoutY="310.0" prefHeight="25.0" prefWidth="79.0" promptText="UPPER LIMIT">
+                     <font>
+                        <Font size="9.0" />
+                     </font>
+                  </TextField>
+                  <Button layoutX="95.0" layoutY="135.0" mnemonicParsing="false" text="&gt;" />
+                  <Button layoutX="123.0" layoutY="135.0" mnemonicParsing="false" text="&lt;" />
+                  <Button layoutX="153.0" layoutY="135.0" mnemonicParsing="false" text="==" />
+                  <Button fx:id="BUTTON_SEARCH11" layoutX="27.0" layoutY="463.0" mnemonicParsing="false" onAction="#searchPlayer" text="Refresh" />
+               </children>
+            </AnchorPane>
+            <VBox alignment="TOP_CENTER">
+               <children>
+                  <Label fx:id="TEXT_SEARCH_FOUND_NUMBER" text="Enter Search Parameters">
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                  </Label>
+                  <ListView fx:id="psl" VBox.vgrow="ALWAYS">
+                     <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </padding>
+                  </ListView>
+                  <HBox>
+                     <children>
+                        <Label fx:id="TEXT_SEARCH_FOUND_NUMBER1" text="Active user(s):">
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </Label>
+                        <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" text="Total Available Players:" textAlignment="CENTER">
+                           <HBox.margin>
+                              <Insets left="50.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </items>
+      </SplitPane>
+   </children>
+</AnchorPane>
