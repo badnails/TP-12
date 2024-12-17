@@ -1,16 +1,19 @@
 package com.example.practice.Database;
 
+import com.example.practice.Requests.TransferTicket;
+import com.example.practice.Requests.searchQuery;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import java.util.Objects;
 import java.util.Scanner;
 
 public class DB {
     private HashMap<String, player> players;
     private HashMap<String, club> clubs;
     private HashMap<String, country> countries;
+    private ArrayList<player> transferList;
 
     Scanner sc = new Scanner(System.in);
     
@@ -18,6 +21,7 @@ public class DB {
         players = new HashMap<>();
         clubs = new HashMap<>();
         countries = new HashMap<>();
+        transferList = new ArrayList<>();
     }
 
     public void addPlayer(player ob)
@@ -241,12 +245,11 @@ public class DB {
         sc.nextLine();
     }    
 
-    public void writeToFile(String FILE_NAME) throws Exception
-    {
+    public void writeToFile(String FILE_NAME) throws IOException {
         BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_NAME));
         for(player temp: players.values())
         {
-            bw.write(temp.getName()+","+temp.getCountry()+","+temp.getAge()+","+temp.getHeight()+","+temp.getClub()+","+temp.getPosition()+","+((temp.getJersey()==-1)?"":temp.getJersey())+","+temp.getSalary());
+            bw.write(temp.getName()+","+temp.getCountry()+","+temp.getAge()+","+temp.getHeight()+","+temp.getClub()+","+temp.getPosition()+","+((temp.getJersey()==-1)?"":temp.getJersey())+","+temp.getSalary()+","+temp.isTransferListed());
             bw.write(System.lineSeparator());
         }
         bw.close();
@@ -260,7 +263,7 @@ public class DB {
             {
                 String line = br.readLine();
                 if(line == null) break;
-                String[] tokens = line.split(",", 8);
+                String[] tokens = line.split(",", 9);
 
                 int jerseyNumber;
                 try
@@ -274,7 +277,7 @@ public class DB {
 
                 if(findPlayer(tokens[0].toLowerCase())==null)
                 {
-                    player newPlayer = new player(tokens[0], tokens[1], Integer.parseInt(tokens[2]), Double.parseDouble(tokens[3]), tokens[4], tokens[5], jerseyNumber, Integer.parseInt(tokens[7]));
+                    player newPlayer = new player(tokens[0], tokens[1], Integer.parseInt(tokens[2]), Double.parseDouble(tokens[3]), tokens[4], tokens[5], jerseyNumber, Integer.parseInt(tokens[7]), tokens[8].equals("true"));
                     addPlayer(newPlayer);
 
                     country countryObject = findCountry(tokens[1].toLowerCase());
@@ -303,6 +306,11 @@ public class DB {
                         clubObject.addPlayer(newPlayer);
                     }
 
+                    if(newPlayer.isTransferListed())
+                    {
+                        transferList.add(newPlayer);
+                    }
+
                 }
                 else
                 {
@@ -320,85 +328,242 @@ public class DB {
 
     }
 
-    public ArrayList<player> searchFunction(searchQuery query)
+    synchronized public searchQuery searchFunction(searchQuery query, String clubName)
     {
-        ArrayList<player> ret = new ArrayList<>(players.values());
+        ArrayList<player> pool = new ArrayList<>();
+        ArrayList<player> found = new ArrayList<>();
+
+        if(query.getQueryType()==1)
+        {
+            for(player temp: players.values())
+            {
+                if(temp.getClub().equalsIgnoreCase(clubName))
+                {
+                    pool.add(temp);
+                }
+            }
+            found = new ArrayList<>(pool);
+        }
+        if(query.getQueryType()==2)
+        {
+            for(player temp: transferList)
+            {
+                if(!temp.getClub().equalsIgnoreCase(clubName))
+                {
+                    pool.add(temp);
+                }
+            }
+            found = new ArrayList<>(pool);
+        }
 
         if(query.getName()!=null)
         {
-            ret.clear();
-            player playerObject = findPlayer(query.getName());
-            if(playerObject!=null)
+            ArrayList<player> temp = new ArrayList<>();
+            for(player tempPlayer : pool)
             {
-                ret.add(playerObject);
+                if(tempPlayer.name.equalsIgnoreCase(query.getName()))
+                {
+                    temp.add(tempPlayer);
+                    break;
+                }
             }
+            found = temp;
         }
         if(query.getCountry()!=null)
         {
-            if(ret.size()==1)
-            {
-                if(!ret.getFirst().getCountry().equals(query.getCountry())) ret.clear();
-            }
-            else
-            {
-                ret.clear();
-                country countryObject = findCountry(query.getCountry());
-                if(countryObject!=null)
-                {
-                    ret = new ArrayList<>(countryObject.getPlayers().values());
-                }
-            }
+            ArrayList<player> temp= new ArrayList<>(findCountry(query.getCountry()).players.values());
+            temp.retainAll(found);
+            found = temp;
         }
         if(query.getAge()!=null)
         {
             ArrayList<player> temp = new ArrayList<>();
-            for(player tempPlayer : ret)
+            for(player tempPlayer : pool)
             {
-                if(tempPlayer.getAge()>query.getAge())
+                switch(query.getAge_op())
                 {
-                    temp.add(tempPlayer);
+                    case ">":
+                        if(tempPlayer.age>query.getAge())
+                        {
+                            temp.add(tempPlayer);
+                        }
+                        break;
+                    case "<":
+                        if(tempPlayer.age<query.getAge())
+                        {
+                            temp.add(tempPlayer);
+                        }
+                        break;
+                    case "==":
+                        if(tempPlayer.age==query.getAge())
+                        {
+                            temp.add(tempPlayer);
+                        }
                 }
             }
-            ret = temp;
+            temp.retainAll(found);
+            found = temp;
         }
         if(query.getJersey()!=null)
         {
             ArrayList<player> temp = new ArrayList<>();
-            for(player tempPlayer : ret)
+            for(player tempPlayer : pool)
             {
                 if(tempPlayer.getJersey()==query.getJersey())
                 {
                     temp.add(tempPlayer);
                 }
             }
-            ret = temp;
+            temp.retainAll(found);
+            found = temp;
         }
-        if(query.getSalary()!=null)
+        if(query.getLowSalary()!=null || query.getHighSalary()!=null)
         {
             ArrayList<player> temp = new ArrayList<>();
-            for(player tempPlayer : ret)
+            for(player tempPlayer : pool)
             {
-                if(tempPlayer.getSalary()==query.getSalary())
+                if(query.getLowSalary()!=null && query.getHighSalary()!=null && tempPlayer.getSalary()>=query.getLowSalary() && tempPlayer.getSalary()<=query.getHighSalary())
+                {
+                    temp.add(tempPlayer);
+                }
+                else if(query.getHighSalary()!=null && tempPlayer.getSalary()<=query.getHighSalary())
+                {
+                    temp.add(tempPlayer);
+                }
+                else if(query.getLowSalary()!=null && tempPlayer.getSalary()>=query.getLowSalary())
                 {
                     temp.add(tempPlayer);
                 }
             }
-            ret = temp;
+            temp.retainAll(found);
+            found = temp;
         }
         if(query.getPosition()!=null)
         {
             ArrayList<player> temp = new ArrayList<>();
-            for (player tempPlayer : ret)
+            for (player tempPlayer : pool)
             {
-                if(tempPlayer.getPosition().equals(query.getPosition()))
+                if(tempPlayer.getPosition().equalsIgnoreCase(query.getPosition()))
                 {
                     temp.add(tempPlayer);
                 }
             }
-            ret = temp;
+            temp.retainAll(found);
+            found = temp;
+        }
+        if(query.getHeight()!=null)
+        {
+            ArrayList<player> temp = new ArrayList<>();
+            for(player tempPlayer : pool)
+            {
+                switch(query.getHeight_op())
+                {
+                    case ">":
+                        if(tempPlayer.height>query.getHeight())
+                        {
+                            temp.add(tempPlayer);
+                        }
+                        break;
+                    case "<":
+                        if(tempPlayer.height<query.getHeight())
+                        {
+                            temp.add(tempPlayer);
+                        }
+                        break;
+                    case "==":
+                        if(tempPlayer.height==query.getHeight())
+                        {
+                            temp.add(tempPlayer);
+                        }
+                }
+            }
+            temp.retainAll(found);
+            found = temp;
         }
 
-        return ret;
+        if(found.isEmpty())
+        {
+            query.setFound(false);
+        }
+        else
+        {
+            query.setFound(true);
+
+            query.setResults(found);
+        }
+
+        return query;
     }
+
+    synchronized public TransferTicket transferRequest(TransferTicket ticket, String requestFrom)
+    {
+        if(ticket.getMode()==1)
+        {
+            if(findPlayer(ticket.getPlayerObject().name).isTransferListed())
+            {
+                ticket.setSuccess(false);
+                return ticket;
+            }
+            else
+            {
+                player playerObject = findPlayer(ticket.getPlayerObject().name);
+                playerObject.setTransferListed(true);
+                transferList.add(playerObject);
+
+                System.out.println(findClub(playerObject.getClub()).players.get(playerObject.name.toLowerCase()).isTransferListed());
+
+                ticket.setSuccess(true);
+                return ticket;
+            }
+        }
+        else if(ticket.getMode()==2)
+        {
+            if(findPlayer(ticket.getPlayerObject().name).isTransferListed())
+            {
+                club seller = findClub(ticket.getPlayerObject().club);
+                club buyer = findClub(requestFrom);
+
+                player playerObject = findPlayer(ticket.getPlayerObject().name);
+                players.remove(playerObject.name.toLowerCase());
+                seller.players.remove(ticket.getPlayerObject().name.toLowerCase());
+                if(transferList.remove(playerObject))
+                {
+                    System.out.println("true");
+                }
+                else
+                {
+                    System.out.println("false");
+
+                    for(player tempPlayer : transferList)
+                {
+                    System.out.println(tempPlayer.getName());
+                }
+                    System.out.println("-----------"+playerObject.getName());
+                }
+
+
+                playerObject.setClub(buyer.getName());
+                playerObject.setTransferListed(false);
+
+                buyer.players.put(playerObject.getName().toLowerCase(), playerObject);
+                players.put(playerObject.getName().toLowerCase(), playerObject);
+
+
+                ticket.setSuccess(true);
+                return ticket;
+            }
+            else
+            {
+                ticket.setSuccess(false);
+                return ticket;
+            }
+        }
+        else {
+            return ticket;
+        }
+//        findPlayer(tempPlayer.name).setTransferListed(true);
+//        transferList.add(tempPlayer);
+    }
+
 
 }

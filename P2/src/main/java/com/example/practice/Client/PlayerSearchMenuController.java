@@ -1,8 +1,10 @@
-package com.example.practice;
+package com.example.practice.Client;
 
+import com.example.practice.Server.Server;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -10,37 +12,69 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import com.example.practice.Database.player;
-import com.example.practice.Database.searchQuery;
+import com.example.practice.Requests.searchQuery;
 
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
-public class PlayerSearchMenuController {
-
+public class PlayerSearchMenuController implements Initializable {
+    @FXML
+    private ToggleButton TOGGLE_AGE_G, TOGGLE_AGE_L, TOGGLE_AGE_E, TOGGLE_H_G, TOGGLE_H_L, TOGGLE_H_E;
     @FXML
     private Label TEXT_SEARCH_FOUND_NUMBER;
     @FXML
-    private Button BUTTON_SEARCH, BACK_TO_MAIN;
+    private Button BUTTON_SEARCH, BACK_TO_MAIN, BUTTON_TILE_TRANSFER, BUTTON_RESET;
     @FXML
-    private TextField TEXTBOX_SEARCH_NAME, TEXTBOX_SEARCH_AGE, TEXTBOX_SEARCH_COUNTRY, TEXTBOX_SEARCH_JN, TEXTBOX_SEARCH_SALARY, TEXTBOX_SEARCH_POS;
+    private TextField TEXTBOX_SEARCH_NAME, TEXTBOX_SEARCH_AGE, TEXTBOX_SEARCH_COUNTRY, TEXTBOX_SEARCH_JN, TEXTBOX_SEARCH_POS, TEXTBOX_SEARCH_HEIGHT, TEXTBOX_SEARCH_LSAL, TEXTBOX_SEARCH_RSAL;
     @FXML
     private ListView<AnchorPane> psl;
+
+    ToggleGroup group1 = new ToggleGroup();
+    ToggleGroup group2 = new ToggleGroup();
+
 
 
     private ArrayList<player> searchForPlayers()
     {
+        String age_op;
+        age_op = ((ToggleButton)group1.getSelectedToggle()).getText();
+        String height_op;
+        height_op = ((ToggleButton)group2.getSelectedToggle()).getText();
+
         searchQuery query = new searchQuery(
                 TEXTBOX_SEARCH_NAME.getText().isEmpty()?null:TEXTBOX_SEARCH_NAME.getText(),
                 TEXTBOX_SEARCH_COUNTRY.getText().isEmpty()?null:TEXTBOX_SEARCH_COUNTRY.getText(),
-                TEXTBOX_SEARCH_AGE.getText().isEmpty()?null:parseInput(TEXTBOX_SEARCH_AGE.getText()),
-                TEXTBOX_SEARCH_SALARY.getText().isEmpty()?null:parseInput(TEXTBOX_SEARCH_SALARY.getText()),
+                TEXTBOX_SEARCH_AGE.getText().isEmpty()?null:(Integer) parseInput(TEXTBOX_SEARCH_AGE.getText()),
+                age_op,
+                TEXTBOX_SEARCH_LSAL.getText().isEmpty()?null:(Integer) parseInput(TEXTBOX_SEARCH_LSAL.getText()),
+                TEXTBOX_SEARCH_RSAL.getText().isEmpty()?null:(Integer) parseInput(TEXTBOX_SEARCH_RSAL.getText()),
                 TEXTBOX_SEARCH_POS.getText().isEmpty()?null:TEXTBOX_SEARCH_POS.getText(),
-                TEXTBOX_SEARCH_JN.getText().isEmpty()?null:parseInput(TEXTBOX_SEARCH_JN.getText())
+                TEXTBOX_SEARCH_JN.getText().isEmpty()?null:(Integer) parseInput(TEXTBOX_SEARCH_JN.getText()),
+                TEXTBOX_SEARCH_HEIGHT.getText().isEmpty()?null:(Double) parseInput(TEXTBOX_SEARCH_HEIGHT.getText()),
+                height_op,
+                1//Club Search
         );
+        searchQuery newQ;
+        try {
+            query.setFrom("Client");
+            Client.socket.reset();
+            Client.socket.write(query);
+            newQ = (searchQuery) Client.socket.read();
+            System.out.println(newQ.getFrom());
+            for(player temp: newQ.getResults())
+            {
+                System.out.println(temp.getName()+" "+temp.isTransferListed());
+            }
 
-        return Client.db.searchFunction(query);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return newQ.getResults();
     }
 
 
@@ -69,6 +103,19 @@ public class PlayerSearchMenuController {
                 labels[5].setText(String.valueOf(playerObject.getSalary()));
                 labels[6].setText(String.valueOf(playerObject.getJersey()));
 
+                Button TRANSFER_BUTTON = (Button) Tile.getChildren().get(1);
+
+                if(playerObject.isTransferListed())
+                {
+                    TRANSFER_BUTTON.setDisable(true);
+                }
+                else
+                {
+                    TRANSFER_BUTTON.setUserData(playerObject);
+                }
+
+
+                Tile.prefWidthProperty().bind(psl.widthProperty().subtract(30));
                 psl.getItems().add(Tile);
             }
         }
@@ -92,14 +139,47 @@ public class PlayerSearchMenuController {
         Client.mainMenu();
     }
 
-    private Integer parseInput(String text) {
+    private Number parseInput(String text) {
         try
         {
             return Integer.parseInt(text);
         }
         catch (NumberFormatException e)
         {
-            return null;
+            try
+            {
+                return Double.parseDouble(text);
+            }
+            catch (NumberFormatException e1)
+            {
+                return -1;
+            }
         }
+    }
+
+
+    public void resetFields(ActionEvent event) {
+        TEXTBOX_SEARCH_NAME.clear();
+        TEXTBOX_SEARCH_AGE.clear();
+        TEXTBOX_SEARCH_COUNTRY.clear();
+        TEXTBOX_SEARCH_JN.clear();
+        TEXTBOX_SEARCH_LSAL.clear();
+        TEXTBOX_SEARCH_RSAL.clear();
+        TEXTBOX_SEARCH_POS.clear();
+        TEXTBOX_SEARCH_HEIGHT.clear();
+        TOGGLE_H_G.setSelected(true);
+        TOGGLE_AGE_G.setSelected(true);
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        TOGGLE_AGE_E.setToggleGroup(group1);
+        TOGGLE_AGE_L.setToggleGroup(group1);
+        TOGGLE_AGE_G.setToggleGroup(group1);
+        TOGGLE_H_E.setToggleGroup(group2);
+        TOGGLE_H_L.setToggleGroup(group2);
+        TOGGLE_H_G.setToggleGroup(group2);
+        TOGGLE_H_G.setSelected(true);
+        TOGGLE_AGE_G.setSelected(true);
     }
 }

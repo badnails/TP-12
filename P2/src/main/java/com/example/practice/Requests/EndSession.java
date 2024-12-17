@@ -1,4 +1,6 @@
 package com.example.practice.Requests;
 
-public class EndSession {
+import java.io.Serializable;
+
+public class EndSession implements Serializable {
 }

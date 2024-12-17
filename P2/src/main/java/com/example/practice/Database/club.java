@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 public class club {
     String name;
+    String password;
     int maxSalary;
     int maxAge;
     double maxHeight;
@@ -12,6 +13,7 @@ public class club {
 	
     public club(String name) {
 		this.name = name;
+        this.password = "1234";
         this.maxAge = 0;
         this.maxSalary = 0;
         this.maxHeight = 0;
@@ -53,4 +55,7 @@ public class club {
 		return players;
 	}
 
+    public String getPassword() {
+        return password;
+    }
 }

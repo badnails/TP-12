@@ -1,5 +1,8 @@
 package com.example.practice.Database;
-public class player {
+
+import java.io.Serializable;
+
+public class player implements Serializable {
     String name;
     String country;
     int age;
@@ -8,9 +11,10 @@ public class player {
     String position;
     int jersey;
     int salary;
+	boolean transferListed;
 	
 	public player(String name, String country, int age, double height, String club, String position, int jersey,
-			int salary) {
+			int salary, boolean transferListed) {
 		this.name = name;
 		this.country = country;
 		this.age = age;
@@ -19,6 +23,7 @@ public class player {
 		this.position = position;
 		this.jersey = jersey;
 		this.salary = salary;
+		this.transferListed = transferListed;
 	}
 
 	public String getName() {
@@ -56,6 +61,15 @@ public class player {
 	public void display()
 	{
 		System.out.print("[Name: "+name+"; Country: "+country+"; Age: "+age+"; Height: "+height+"; Club: "+club+"; Position: "+position+"; Jersey number: "+(jersey==-1?"N/A":jersey)+"; Weekly Salary: "+salary+"]\n");
+	}
+	public void setTransferListed(boolean transferListed) {
+		this.transferListed = transferListed;
+	}
+	public boolean isTransferListed() {
+		return transferListed;
+	}
+	public void setClub(String club) {
+		this.club = club;
 	}
 
     
