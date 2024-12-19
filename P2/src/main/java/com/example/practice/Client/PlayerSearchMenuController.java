@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class PlayerSearchMenuController extends ControllerWrapper implements Initializable {
+public class PlayerSearchMenuController implements Initializable {
     @FXML
     private ToggleButton TOGGLE_AGE_G, TOGGLE_AGE_L, TOGGLE_AGE_E, TOGGLE_H_G, TOGGLE_H_L, TOGGLE_H_E;
     @FXML
@@ -36,10 +36,10 @@ public class PlayerSearchMenuController extends ControllerWrapper implements Ini
     ToggleGroup group2 = new ToggleGroup();
 
     public void searchPlayer(ActionEvent event) throws IOException {
-        listFiller(1);
+        requestSearch(1);
     }
 
-    private ArrayList<player> searchForPlayers(int mode)
+    public void requestSearch(int mode)             //(1) Regular (0) Previous
     {
         String age_op;
         age_op = ((ToggleButton)group1.getSelectedToggle()).getText();
@@ -70,26 +70,16 @@ public class PlayerSearchMenuController extends ControllerWrapper implements Ini
         }
 
         try {
-            query.setFrom("Client");
             Client.socket.reset();
             Client.socket.write(query);
-            query = (searchQuery) Client.socket.read();
-            System.out.println(query.getFrom());
-            for(player temp: query.getResults())
-            {
-                System.out.println(temp.getName()+" "+temp.isTransferListed());
-            }
 
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-        return query.getResults();
     }
 
-    public void listFiller(int mode) throws IOException {
+    public void listFiller(ArrayList<player> found) throws IOException {
         psl.getItems().clear();
-        ArrayList<player> found = searchForPlayers(mode);
         TEXT_SEARCH_FOUND_NUMBER.setText(String.format("Found: %d Players", found.size()));
 
         if (!found.isEmpty()) {
@@ -99,7 +89,7 @@ public class PlayerSearchMenuController extends ControllerWrapper implements Ini
                 AnchorPane Tile = (AnchorPane) FXMLLoader.load(Objects.requireNonNull(getClass().getResource("playerTile.fxml")));
                 Label[] labels = new Label[8];
 
-                for(int j = 0; j < 7; j++)
+                for(int j = 0; j < 8; j++)
                 {
                     labels[j] = (Label) ((HBox) ((VBox) Tile.getChildren().get(0)).getChildren().get(j)).getChildren().get(1);
                 }
@@ -111,6 +101,7 @@ public class PlayerSearchMenuController extends ControllerWrapper implements Ini
                 labels[4].setText(String.format("%.2f", playerObject.getHeight()));
                 labels[5].setText(String.valueOf(playerObject.getSalary()));
                 labels[6].setText(String.valueOf(playerObject.getJersey()));
+                labels[7].setText(String.valueOf(playerObject.getPosition()));
 
                 Button TRANSFER_BUTTON = (Button) Tile.getChildren().get(1);
 
@@ -180,18 +171,6 @@ public class PlayerSearchMenuController extends ControllerWrapper implements Ini
         TOGGLE_AGE_G.setSelected(true);
     }
 
-    @Override
-    public void refresh()
-    {
-        try
-        {
-            listFiller(0);
-        }
-        catch(IOException e)
-        {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -203,5 +182,6 @@ public class PlayerSearchMenuController extends ControllerWrapper implements Ini
         TOGGLE_H_G.setToggleGroup(group2);
         TOGGLE_H_G.setSelected(true);
         TOGGLE_AGE_G.setSelected(true);
+        Client.controller = this;
     }
 }

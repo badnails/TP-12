@@ -20,7 +20,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class TransferMenuController extends ControllerWrapper implements Initializable {
+public class TransferMenuController implements Initializable {
     @FXML
     private ToggleButton TOGGLE_AGE_G, TOGGLE_AGE_L, TOGGLE_AGE_E, TOGGLE_H_G, TOGGLE_H_L, TOGGLE_H_E;
     @FXML
@@ -36,9 +36,11 @@ public class TransferMenuController extends ControllerWrapper implements Initial
     ToggleGroup group1 = new ToggleGroup();
     ToggleGroup group2 = new ToggleGroup();
 
+    public void searchPlayer(ActionEvent event) throws IOException {
+        requestSearch(1);
+    }
 
-
-    private ArrayList<player> searchForPlayers(int mode)
+    public void requestSearch(int mode)             //(1) Regular (0) Previous
     {
         String age_op;
         age_op = ((ToggleButton)group1.getSelectedToggle()).getText();
@@ -69,17 +71,15 @@ public class TransferMenuController extends ControllerWrapper implements Initial
         }
 
         try {
+            Client.socket.reset();
             Client.socket.write(query);
-            query = (searchQuery) Client.socket.read();
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        return query.isFound()?query.getResults():null;
     }
 
-    public void listFiller(int mode) throws IOException {
+    public void listFiller(ArrayList<player> found) throws IOException {
         psl.getItems().clear();
-        ArrayList<player> found = searchForPlayers(mode);
         TEXT_SEARCH_FOUND_NUMBER.setText(String.format("Found: %d Players", found!=null?found.size():0));
 
         if (found!=null && !found.isEmpty()) {
@@ -108,7 +108,6 @@ public class TransferMenuController extends ControllerWrapper implements Initial
                 BUY_BUTTON.setUserData(playerObject);
 
                 TransferTileController ttilecont = loader.<TransferTileController>getController();
-                ttilecont.setTransferMenuController(this);
 
 
                 Tile.prefWidthProperty().bind(psl.widthProperty().subtract(30));
@@ -129,11 +128,6 @@ public class TransferMenuController extends ControllerWrapper implements Initial
             AnchorPane.setRightAnchor(vBox, 0.0);
             psl.getItems().add(anchorPane);
         }
-    }
-
-
-    public void searchPlayer(ActionEvent event) throws IOException {
-        listFiller(1);
     }
 
     public void backToMain(ActionEvent event) throws IOException {
@@ -175,18 +169,6 @@ public class TransferMenuController extends ControllerWrapper implements Initial
         TOGGLE_AGE_G.setSelected(true);
     }
 
-    @Override
-    public void refresh()
-    {
-        try
-        {
-            listFiller(0);
-        }
-        catch(IOException e)
-        {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -198,6 +180,7 @@ public class TransferMenuController extends ControllerWrapper implements Initial
         TOGGLE_H_G.setToggleGroup(group2);
         TOGGLE_H_G.setSelected(true);
         TOGGLE_AGE_G.setSelected(true);
+        Client.controller = this;
     }
 
 //    void removeTile(Button button)

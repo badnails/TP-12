@@ -25,7 +25,6 @@ public class ServerListener implements Runnable {
             while(true)
             {
                 Object received = client.read();
-                System.out.println("Packet received from: " + client.getClubObject().getName());
                 if(received instanceof searchQuery)
                 {
                     System.out.println("--------"+"Search Query from: " + client.getClubObject().getName()+"--------");
@@ -51,6 +50,8 @@ public class ServerListener implements Runnable {
                 }
                 if(received instanceof EndSession)
                 {
+                    System.out.println("End Session requested from: " + client.getClubObject().getName());
+                    client.write(received);
                     break;
                 }
             }
@@ -61,9 +62,9 @@ public class ServerListener implements Runnable {
             try {
                 client.close();
                 Server.clients.remove(client);
-                System.out.println("Server Listener Thread Terminated");
+                System.out.println("!!!Connection Terminated: "+client.getClubObject().getName());
             } catch (IOException e) {
-                System.out.println(e);
+                e.printStackTrace();
             }
 
         }

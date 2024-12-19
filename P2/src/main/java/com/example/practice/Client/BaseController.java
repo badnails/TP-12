@@ -1,5 +1,8 @@
 package com.example.practice.Client;
 
+import com.example.practice.Requests.EndSession;
+import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,7 +18,7 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class BaseController extends ControllerWrapper implements Initializable {
+public class BaseController implements Initializable {
     @FXML
     private ImageView BASE_LOGO;
     @FXML
@@ -38,10 +41,10 @@ public class BaseController extends ControllerWrapper implements Initializable {
         AnchorPane.setRightAnchor(toShow, 10.0);
 
         if(controller instanceof PlayerSearchMenuController) {
-            ((PlayerSearchMenuController) controller).listFiller(0);
+            ((PlayerSearchMenuController) controller).requestSearch(0);
         }
         else if(controller instanceof TransferMenuController) {
-            ((TransferMenuController) controller).listFiller(0);
+            ((TransferMenuController) controller).requestSearch(0);
         }
     }
 
@@ -76,9 +79,11 @@ public class BaseController extends ControllerWrapper implements Initializable {
 
     }
 
-    @Override
-    public void refresh()
-    {
-        System.out.println("Home refresh");
+    public void logoutUser(ActionEvent event) throws IOException {
+        if(Client.connected)
+        {
+            Client.socket.write(new EndSession(true));
+        }
+        Client.mainMenu();
     }
 }

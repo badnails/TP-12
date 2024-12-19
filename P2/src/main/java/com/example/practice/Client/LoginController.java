@@ -39,14 +39,14 @@ public class LoginController {
                 AuthRequest authRequest = new AuthRequest(LOGIN_CLUBNAME.getText(), LOGIN_PASS.getText());
                 ClientSocketHandler socket = new ClientSocketHandler("127.0.0.1", 11111);
                 socket.write(authRequest);
-//                try
-//                {
-//                    authRequest = (AuthRequest) socket.read();
-//                }
-//                catch (Exception e)
-//                {
-//                    e.printStackTrace();
-//                }
+                try
+                {
+                    authRequest = (AuthRequest) socket.read();
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
                 if(authRequest instanceof AuthRequest)
                 {
                     if(authRequest.isAuthenticated())
@@ -64,7 +64,8 @@ public class LoginController {
                         Scene scene = new Scene(a1);
 
                         Client.sceneSetter(scene, authRequest.getCredName());
-                        new ClientListener(socket);
+                        new ClientListener();
+                        Client.connected = true;
                     }
                     else
                     {

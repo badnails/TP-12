@@ -379,7 +379,16 @@ public class DB {
         }
         if(query.getCountry()!=null)
         {
-            ArrayList<player> temp= new ArrayList<>(findCountry(query.getCountry()).players.values());
+            ArrayList<player> temp;
+            country countryObject = findCountry(query.getCountry());
+            if(countryObject!=null)
+            {
+                temp = new ArrayList<player>(countryObject.players.values());
+            }
+            else
+            {
+                temp = new ArrayList<>();
+            }
             temp.retainAll(found);
             found = temp;
         }

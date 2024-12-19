@@ -17,8 +17,9 @@ import java.util.logging.Logger;
 import com.example.practice.Database.DB;
 
 public class Client extends Application {
+    static boolean connected = false;
     protected static ClientSocketHandler socket;
-    protected static ControllerWrapper currentController;
+    protected static Object controller;
     protected static Stage mainStage;
     protected static club clubObject;
     protected static searchQuery lastSearchQ = new searchQuery(1);
@@ -32,12 +33,13 @@ public class Client extends Application {
 
     @Override
     public void stop() throws IOException {
-        if(socket!=null)
+        if(connected)
         {
-            socket.write(new EndSession());
-            socket.close();
+            socket.write(new EndSession(false));
         }
-        System.out.println(clubObject.getName() + " stopped");
+        System.out.println(clubObject!=null?clubObject.getName():"null" + " ended");
+        socket = null;
+        clubObject = null;
     }
 
     public static void mainMenu() throws IOException
