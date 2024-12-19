@@ -1,7 +1,5 @@
 package com.example.practice.Client;
 
-import com.example.practice.Server.Server;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,10 +18,9 @@ import com.example.practice.Requests.searchQuery;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class TransferMenuController implements Initializable {
+public class TransferMenuController extends ControllerWrapper implements Initializable {
     @FXML
     private ToggleButton TOGGLE_AGE_G, TOGGLE_AGE_L, TOGGLE_AGE_E, TOGGLE_H_G, TOGGLE_H_L, TOGGLE_H_E;
     @FXML
@@ -41,43 +38,51 @@ public class TransferMenuController implements Initializable {
 
 
 
-    private ArrayList<player> searchForPlayers()
+    private ArrayList<player> searchForPlayers(int mode)
     {
         String age_op;
         age_op = ((ToggleButton)group1.getSelectedToggle()).getText();
         String height_op;
         height_op = ((ToggleButton)group2.getSelectedToggle()).getText();
+        searchQuery query;
 
-        searchQuery query = new searchQuery(
-                TEXTBOX_SEARCH_NAME.getText().isEmpty()?null:TEXTBOX_SEARCH_NAME.getText(),
-                TEXTBOX_SEARCH_COUNTRY.getText().isEmpty()?null:TEXTBOX_SEARCH_COUNTRY.getText(),
-                TEXTBOX_SEARCH_AGE.getText().isEmpty()?null:(Integer) parseInput(TEXTBOX_SEARCH_AGE.getText()),
-                age_op,
-                TEXTBOX_SEARCH_LSAL.getText().isEmpty()?null:(Integer) parseInput(TEXTBOX_SEARCH_LSAL.getText()),
-                TEXTBOX_SEARCH_RSAL.getText().isEmpty()?null:(Integer) parseInput(TEXTBOX_SEARCH_RSAL.getText()),
-                TEXTBOX_SEARCH_POS.getText().isEmpty()?null:TEXTBOX_SEARCH_POS.getText(),
-                TEXTBOX_SEARCH_JN.getText().isEmpty()?null:(Integer) parseInput(TEXTBOX_SEARCH_JN.getText()),
-                TEXTBOX_SEARCH_HEIGHT.getText().isEmpty()?null:(Double) parseInput(TEXTBOX_SEARCH_HEIGHT.getText()),
-                height_op,
-                2//TransferSearch
-        );
+        if(mode==1)
+        {
+            query = new searchQuery(
+                    TEXTBOX_SEARCH_NAME.getText().isEmpty()?null:TEXTBOX_SEARCH_NAME.getText(),
+                    TEXTBOX_SEARCH_COUNTRY.getText().isEmpty()?null:TEXTBOX_SEARCH_COUNTRY.getText(),
+                    TEXTBOX_SEARCH_AGE.getText().isEmpty()?null:(Integer) parseInput(TEXTBOX_SEARCH_AGE.getText()),
+                    age_op,
+                    TEXTBOX_SEARCH_LSAL.getText().isEmpty()?null:(Integer) parseInput(TEXTBOX_SEARCH_LSAL.getText()),
+                    TEXTBOX_SEARCH_RSAL.getText().isEmpty()?null:(Integer) parseInput(TEXTBOX_SEARCH_RSAL.getText()),
+                    TEXTBOX_SEARCH_POS.getText().isEmpty()?null:TEXTBOX_SEARCH_POS.getText(),
+                    TEXTBOX_SEARCH_JN.getText().isEmpty()?null:(Integer) parseInput(TEXTBOX_SEARCH_JN.getText()),
+                    TEXTBOX_SEARCH_HEIGHT.getText().isEmpty()?null:(Double) parseInput(TEXTBOX_SEARCH_HEIGHT.getText()),
+                    height_op,
+                    2//TransferSearch
+            );
+            Client.lastTransferQ = query;
+        }
+        else
+        {
+            query = Client.lastTransferQ;
+        }
 
         try {
             Client.socket.write(query);
             query = (searchQuery) Client.socket.read();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
-        return query.getResults();
+        return query.isFound()?query.getResults():null;
     }
 
+    public void listFiller(int mode) throws IOException {
+        psl.getItems().clear();
+        ArrayList<player> found = searchForPlayers(mode);
+        TEXT_SEARCH_FOUND_NUMBER.setText(String.format("Found: %d Players", found!=null?found.size():0));
 
-    public void searchPlayer(ActionEvent event) throws IOException {
-        obpsl.clear();
-        ArrayList<player> found = searchForPlayers();
-        TEXT_SEARCH_FOUND_NUMBER.setText(String.format("Found: %d Players", found.size()));
-
-        if (!found.isEmpty()) {
+        if (found!=null && !found.isEmpty()) {
 
             for(player playerObject: found)
             {
@@ -107,7 +112,7 @@ public class TransferMenuController implements Initializable {
 
 
                 Tile.prefWidthProperty().bind(psl.widthProperty().subtract(30));
-                obpsl.add(Tile);
+                psl.getItems().add(Tile);
             }
         }
         else
@@ -122,8 +127,13 @@ public class TransferMenuController implements Initializable {
             AnchorPane.setBottomAnchor(vBox, 0.0);
             AnchorPane.setLeftAnchor(vBox, 0.0);
             AnchorPane.setRightAnchor(vBox, 0.0);
-            obpsl.add(anchorPane);
+            psl.getItems().add(anchorPane);
         }
+    }
+
+
+    public void searchPlayer(ActionEvent event) throws IOException {
+        listFiller(1);
     }
 
     public void backToMain(ActionEvent event) throws IOException {
@@ -166,6 +176,19 @@ public class TransferMenuController implements Initializable {
     }
 
     @Override
+    public void refresh()
+    {
+        try
+        {
+            listFiller(0);
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         TOGGLE_AGE_E.setToggleGroup(group1);
         TOGGLE_AGE_L.setToggleGroup(group1);
@@ -175,13 +198,12 @@ public class TransferMenuController implements Initializable {
         TOGGLE_H_G.setToggleGroup(group2);
         TOGGLE_H_G.setSelected(true);
         TOGGLE_AGE_G.setSelected(true);
-        obpsl = FXCollections.observableArrayList();
-        psl.setItems(obpsl);
     }
 
-    void removeTile(Button button)
-    {
-        AnchorPane pane = (AnchorPane) button.getParent();
-        obpsl.remove(pane);
-    }
+//    void removeTile(Button button)
+//    {
+//        AnchorPane pane = (AnchorPane) button.getParent();
+//        obpslremove(pane);
+//
+//    }
 }

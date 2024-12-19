@@ -1,33 +1,39 @@
 package com.example.practice.Database;
 
-import java.util.HashMap;
+import java.io.Serializable;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-public class club {
+public class club implements Serializable {
     String name;
     String password;
+    String logoSrc;
     int maxSalary;
     int maxAge;
     double maxHeight;
     long totalSalary;
-    HashMap<String, player> players;
+    long budget;
+    Map<String, player> players;
 	
-    public club(String name) {
+    public club(String name, String password, String logoSrc, long budget) {
 		this.name = name;
-        this.password = "1234";
+        this.password = password;
+        this.logoSrc = logoSrc;
+        this.budget = budget;
         this.maxAge = 0;
         this.maxSalary = 0;
         this.maxHeight = 0;
         this.totalSalary = 0;
-        this.players = new HashMap<>();
+        this.players = new LinkedHashMap<>();
 	}
 
     public void addPlayer(player newPlayer)
     {
         players.put(newPlayer.getName().toLowerCase(), newPlayer);
         
-        maxAge = newPlayer.getAge()>maxAge?newPlayer.getAge():maxAge;
-        maxHeight = (newPlayer.getHeight())>maxHeight?newPlayer.getHeight():maxHeight;
-        maxSalary = (newPlayer.getSalary())>maxSalary?newPlayer.getSalary():maxSalary;
+        maxAge = Math.max(newPlayer.getAge(), maxAge);
+        maxHeight = Math.max((newPlayer.getHeight()), maxHeight);
+        maxSalary = Math.max((newPlayer.getSalary()), maxSalary);
         totalSalary+=newPlayer.getSalary();
     }
 
@@ -51,11 +57,41 @@ public class club {
 		return totalSalary;
 	}
 
-	public HashMap<String, player> getPlayers() {
+	public Map<String, player> getPlayers() {
 		return players;
 	}
 
     public String getPassword() {
         return password;
+    }
+    public String getLogoSrc() {
+        return logoSrc;
+    }
+    public void deletePlayer(String name)
+    {
+        player playerObj = players.get(name.toLowerCase());
+        players.remove(name.toLowerCase());
+        totalSalary -= playerObj.getSalary();
+        if(playerObj.getAge() > maxAge || playerObj.getSalary() > maxSalary || playerObj.getHeight() > maxHeight)
+        {
+            maxAge = 0;
+            maxSalary = 0;
+            maxHeight = 0;
+            for(player player : players.values())
+            {
+                if(player.getAge() > maxAge)
+                {
+                    maxAge = player.getAge();
+                }
+                if(player.getSalary() > maxSalary)
+                {
+                    maxSalary = player.getSalary();
+                }
+                if(player.getHeight() > maxHeight)
+                {
+                    maxHeight = player.getHeight();
+                }
+            }
+        }
     }
 }

@@ -42,6 +42,6 @@ public class TransferTileController {
             alert.setContentText(toBuy.getName()+" could not be purchased!");
             alert.showAndWait();
         }
-
+        transferMenuController.listFiller(0);
     }
 }

@@ -39,20 +39,20 @@ public class LoginController {
                 AuthRequest authRequest = new AuthRequest(LOGIN_CLUBNAME.getText(), LOGIN_PASS.getText());
                 ClientSocketHandler socket = new ClientSocketHandler("127.0.0.1", 11111);
                 socket.write(authRequest);
-                try
-                {
-                    authRequest = (AuthRequest) socket.read();
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
+//                try
+//                {
+//                    authRequest = (AuthRequest) socket.read();
+//                }
+//                catch (Exception e)
+//                {
+//                    e.printStackTrace();
+//                }
                 if(authRequest instanceof AuthRequest)
                 {
                     if(authRequest.isAuthenticated())
                     {
                         Client.socket = socket;
-                        Client.clubName = authRequest.getClubName();
+                        Client.clubObject = authRequest.getClubObject();
                         AnchorPane a1 = FXMLLoader.load(getClass().getResource("Base.fxml"));
                         AnchorPane canvas = (AnchorPane) ((VBox)a1.getChildren().get(0)).getChildren().get(1);
                         AnchorPane home = FXMLLoader.load(getClass().getResource("HomePage.fxml"));
@@ -63,7 +63,8 @@ public class LoginController {
 
                         Scene scene = new Scene(a1);
 
-                        Client.sceneSetter(scene, authRequest.getClubName());
+                        Client.sceneSetter(scene, authRequest.getCredName());
+                        new ClientListener(socket);
                     }
                     else
                     {
@@ -79,7 +80,7 @@ public class LoginController {
         }
         catch (IOException e)
         {
-            System.out.println("Server Unreachable");
+            e.printStackTrace();
         }
     }
 }

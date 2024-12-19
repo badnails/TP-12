@@ -22,7 +22,7 @@ public class Server {
             if(auth.isAuthenticated())
             {
                 clients.add(client);
-                System.out.println("CLIENT AUTHENTICATED: "+client.getClubName());
+                System.out.println("CLIENT AUTHENTICATED: "+client.getClubObject().getName());
                 client.write(auth);
                 new ServerListener(client);
             }
@@ -38,7 +38,7 @@ public class Server {
     }
 
     void clientAccess(AuthRequest auth, ClientSocketHandler client) {
-        club clubObject = db.findClub(auth.getClubName());
+        club clubObject = db.findClub(auth.getCredName());
 
         if(clubObject == null) {
             auth.setAuthenticated(false);
@@ -46,11 +46,11 @@ public class Server {
         }
         else
         {
-            if(clubObject.getPassword().equals(auth.getPassword()))
+            if(clubObject.getPassword().equals(auth.getCredPass()))
             {
                 auth.setAuthenticated(true);
-                client.setClubName(clubObject.getName());
-                auth.setClubName(clubObject.getName());
+                client.setClubObject(clubObject);
+                auth.setClubObject(clubObject);
             }
             else
             {

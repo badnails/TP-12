@@ -12,6 +12,7 @@ module com.example.practice {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
     requires java.logging;
+    requires jdk.httpserver;
 
     exports com.example.practice.Client;
     opens com.example.practice.Client;

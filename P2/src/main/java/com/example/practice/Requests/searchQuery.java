@@ -6,21 +6,24 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class searchQuery implements Serializable {
-    String from;
-    String name;
-    String country;
-    Integer age;
-    String age_op;
-    Integer lsal;
-    Integer rsal;
-    String position;
-    Integer jersey;
-    Double height;
-    String height_op;
-    ArrayList<player> results;
-    boolean found;
+    String from = null;
+    String name = null;
+    String country = null;
+    Integer age = null;
+    String age_op = null;
+    Integer lsal = null;
+    Integer rsal = null;
+    String position = null;
+    Integer jersey = null;
+    Double height = null;
+    String height_op = null;
+    ArrayList<player> results = new ArrayList<>();
+    boolean found = false;
     int queryType;
 
+    public searchQuery(int queryType) {
+        this.queryType = queryType;
+    }
 
     public searchQuery(String name, String country, Integer age, String age_op, Integer lsal, Integer rsal,
                        String position, Integer jersey, Double height, String height_op, int queryType) {
@@ -87,7 +90,7 @@ public class searchQuery implements Serializable {
         this.found = found;
     }
     public void setResults(ArrayList<player> results) {
-        this.results = new ArrayList<>(results);
+        this.results = results;
     }
     public int getQueryType() {
         return queryType;

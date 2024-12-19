@@ -4,17 +4,20 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class BaseController implements Initializable {
+public class BaseController extends ControllerWrapper implements Initializable {
+    @FXML
+    private ImageView BASE_LOGO;
     @FXML
     private Text BASE_CLUBNAME;
     @FXML
@@ -22,39 +25,60 @@ public class BaseController implements Initializable {
     @FXML
     private AnchorPane BASE_CANVAS;
 
+    public void editCanvas(String page) throws IOException {
+        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource(page)));
+        AnchorPane toShow = loader.load();
+        Object controller = loader.getController();
 
 
+        BASE_CANVAS.getChildren().remove(1);
+        BASE_CANVAS.getChildren().add(toShow);
+        AnchorPane.setTopAnchor(toShow, 10.0);
+        AnchorPane.setBottomAnchor(toShow, 10.0);
+        AnchorPane.setRightAnchor(toShow, 10.0);
+
+        if(controller instanceof PlayerSearchMenuController) {
+            ((PlayerSearchMenuController) controller).listFiller(0);
+        }
+        else if(controller instanceof TransferMenuController) {
+            ((TransferMenuController) controller).listFiller(0);
+        }
+    }
 
     public void showHome(ActionEvent event) throws IOException {
-        AnchorPane home = FXMLLoader.load(getClass().getResource("HomePage.fxml"));
-        BASE_CANVAS.getChildren().remove(1);
-        BASE_CANVAS.getChildren().add(home);
-        AnchorPane.setTopAnchor(home, 10.0);
-        AnchorPane.setBottomAnchor(home, 10.0);
-        AnchorPane.setRightAnchor(home, 10.0);
-
+        resetAllButtons();
+        AnchorPane.setRightAnchor((Button)event.getSource(), 0.0);
+        editCanvas("HomePage.fxml");
     }
 
     public void showManager(ActionEvent event) throws IOException {
-        AnchorPane searchMenu = FXMLLoader.load(getClass().getResource("SearchMenu.fxml"));
-        BASE_CANVAS.getChildren().remove(1);
-        BASE_CANVAS.getChildren().add(searchMenu);
-        AnchorPane.setTopAnchor(searchMenu, 10.0);
-        AnchorPane.setBottomAnchor(searchMenu, 10.0);
-        AnchorPane.setRightAnchor(searchMenu, 10.0);
+        resetAllButtons();
+        AnchorPane.setRightAnchor((Button)event.getSource(), 0.0);
+        editCanvas("SearchMenu.fxml");
     }
 
     public void showMarket(ActionEvent event) throws IOException {
-        AnchorPane tr = FXMLLoader.load(getClass().getResource("TransferMenu.fxml"));
-        BASE_CANVAS.getChildren().remove(1);
-        BASE_CANVAS.getChildren().add(tr);
-        AnchorPane.setTopAnchor(tr, 10.0);
-        AnchorPane.setBottomAnchor(tr, 10.0);
-        AnchorPane.setRightAnchor(tr, 10.0);
+        resetAllButtons();
+        AnchorPane.setRightAnchor((Button)event.getSource(), 0.0);
+        editCanvas("TransferMenu.fxml");
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        BASE_CLUBNAME.setText(Client.clubName);
+        BASE_LOGO.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("logo/"+ Client.clubObject.getLogoSrc()))));
+        BASE_CLUBNAME.setText(Client.clubObject.getName());
+    }
+
+    private void resetAllButtons() {
+        AnchorPane.setRightAnchor(BASE_HOME, 10.0);
+        AnchorPane.setRightAnchor(BASE_MANAGE, 10.0);
+        AnchorPane.setRightAnchor(BASE_TRANSFER, 10.0);
+
+    }
+
+    @Override
+    public void refresh()
+    {
+        System.out.println("Home refresh");
     }
 }

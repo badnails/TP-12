@@ -4,23 +4,20 @@ import com.example.practice.Requests.TransferTicket;
 import com.example.practice.Requests.searchQuery;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import java.util.Scanner;
+import java.util.*;
 
 public class DB {
-    private HashMap<String, player> players;
-    private HashMap<String, club> clubs;
-    private HashMap<String, country> countries;
+    private Map<String, player> players;
+    private Map<String, club> clubs;
+    private Map<String, country> countries;
     private ArrayList<player> transferList;
 
     Scanner sc = new Scanner(System.in);
     
     public DB() {
-        players = new HashMap<>();
-        clubs = new HashMap<>();
-        countries = new HashMap<>();
+        players = new LinkedHashMap<>();
+        clubs = new LinkedHashMap<>();
+        countries = new LinkedHashMap<>();
         transferList = new ArrayList<>();
     }
 
@@ -258,7 +255,18 @@ public class DB {
     public void input(){
         try
         {
-            BufferedReader br = new BufferedReader(new FileReader("src\\main\\java\\com\\example\\practice\\Database\\players.txt"));
+            BufferedReader br;
+            br = new BufferedReader(new FileReader("src\\main\\java\\com\\example\\practice\\Database\\clubs.txt"));
+            while(true)
+            {
+                String line = br.readLine();
+                if(line==null) break;
+                String[] tokens = line.split(",");
+                club newClub = new club(tokens[0], tokens[1], tokens[2], Long.parseLong(tokens[3]));
+                clubs.put(newClub.getName().toLowerCase(), newClub);
+            }
+
+            br = new BufferedReader(new FileReader("src\\main\\java\\com\\example\\practice\\Database\\players.txt"));
             while(true)
             {
                 String line = br.readLine();
@@ -297,7 +305,7 @@ public class DB {
 
                     if(clubObject==null)
                     {
-                        clubObject = new club(tokens[4]);
+                        clubObject = new club(tokens[4], "1234", null, 0);
                         clubObject.addPlayer(newPlayer);
                         addClub(clubObject);
                     }
@@ -484,6 +492,7 @@ public class DB {
         if(found.isEmpty())
         {
             query.setFound(false);
+            query.setResults(new ArrayList<>());
         }
         else
         {
@@ -522,32 +531,24 @@ public class DB {
             {
                 club seller = findClub(ticket.getPlayerObject().club);
                 club buyer = findClub(requestFrom);
-
                 player playerObject = findPlayer(ticket.getPlayerObject().name);
-                players.remove(playerObject.name.toLowerCase());
-                seller.players.remove(ticket.getPlayerObject().name.toLowerCase());
-                if(transferList.remove(playerObject))
-                {
-                    System.out.println("true");
-                }
-                else
-                {
-                    System.out.println("false");
 
-                    for(player tempPlayer : transferList)
-                {
-                    System.out.println(tempPlayer.getName());
+                seller.deletePlayer(playerObject.name.toLowerCase());
+                buyer.addPlayer(playerObject);
+
+                if (transferList.remove(playerObject)) {
+                    System.out.println("\n\n/////Off List/////");
+                } else {
+                    System.out.println("\n\n\\\\Not off//////\n\n");
                 }
-                    System.out.println("-----------"+playerObject.getName());
+                for (player player : transferList) {
+                    System.out.println(player.name.toLowerCase());
+                    System.out.println("\n\n\n");
                 }
 
 
                 playerObject.setClub(buyer.getName());
                 playerObject.setTransferListed(false);
-
-                buyer.players.put(playerObject.getName().toLowerCase(), playerObject);
-                players.put(playerObject.getName().toLowerCase(), playerObject);
-
 
                 ticket.setSuccess(true);
                 return ticket;

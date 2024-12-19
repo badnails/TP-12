@@ -1,0 +1,10 @@
+Mumbai Indians,12345,mi.png,500000000
+Delhi Capitals,12345,dc.png,500000000
+Kolkata Knight Riders,12345,kkr.png,500000000
+Rajasthan Royals,12345,rr.png,500000000
+Chennai Super Kings,12345,csk.png,500000000
+Royal Challengers Bangalore,12345,rcb.png,500000000
+Sunrisers Hyderabad,12345,srh.png,500000000
+Punjab Kings,12345,pk.png,500000000
+Gujarat Titans,12345,gt.png,500000000
+Lucknow Super Giants,12345,lsg.png,500000000

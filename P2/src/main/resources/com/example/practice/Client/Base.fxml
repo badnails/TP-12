@@ -2,36 +2,50 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.practice.Client.BaseController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-radius: 10; -fx-background-color: white;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.practice.Client.BaseController">
    <children>
       <VBox layoutX="216.0" layoutY="105.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <HBox alignment="CENTER_RIGHT" spacing="20.0">
+            <HBox alignment="CENTER_RIGHT" spacing="20.0" style="-fx-background-color: #14e1f7;">
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>
                <children>
                   <Text fx:id="BASE_CLUBNAME" strokeType="OUTSIDE" strokeWidth="0.0" text="CLUBNAME">
                      <font>
-                        <Font name="System Bold" size="29.0" />
+                        <Font name="Segoe UI Black" size="29.0" />
                      </font>
                   </Text>
-                  <Button fx:id="BASE_LOGOUT" mnemonicParsing="false" text="Log Out" />
+                  <Button fx:id="BASE_LOGOUT" mnemonicParsing="false" style="-fx-background-color: #fc5b63; -fx-text-fill: white" text="Log Out">
+                     <font>
+                        <Font name="HP Simplified" size="12.0" />
+                     </font></Button>
                </children>
             </HBox>
             <AnchorPane fx:id="BASE_CANVAS" VBox.vgrow="ALWAYS">
                <children>
                   <AnchorPane layoutX="4.0" layoutY="10.0" prefHeight="516.0" prefWidth="159.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
                      <children>
-                        <Button fx:id="BASE_HOME" layoutX="10.0" layoutY="14.0" mnemonicParsing="false" onAction="#showHome" prefHeight="39.0" prefWidth="99.0" text="Home" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
-                        <Button fx:id="BASE_MANAGE" layoutX="10.0" layoutY="65.0" mnemonicParsing="false" onAction="#showManager" prefHeight="39.0" prefWidth="99.0" text="Manage Players" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
-                        <Button fx:id="BASE_TRANSFER" layoutX="10.0" layoutY="119.0" mnemonicParsing="false" onAction="#showMarket" prefHeight="39.0" prefWidth="99.0" text="Transfer Market" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                        <Button fx:id="BASE_HOME" layoutX="10.0" layoutY="188.0" mnemonicParsing="false" onAction="#showHome" prefHeight="39.0" prefWidth="99.0"  text="Home" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                           <font>
+                              <Font name="HP Simplified" size="12.0" />
+                           </font></Button>
+                        <Button fx:id="BASE_MANAGE" layoutX="10.0" layoutY="239.0" mnemonicParsing="false" onAction="#showManager" prefHeight="39.0" prefWidth="99.0"  text="Manage Players" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                           <font>
+                              <Font name="HP Simplified" size="12.0" />
+                           </font></Button>
+                        <Button fx:id="BASE_TRANSFER" layoutX="10.0" layoutY="293.0" mnemonicParsing="false" onAction="#showMarket" prefHeight="39.0" prefWidth="99.0"  text="Transfer Market" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                           <font>
+                              <Font name="HP Simplified" size="12.0" />
+                           </font></Button>
+                        <ImageView fx:id="BASE_LOGO" fitHeight="120.0" fitWidth="120.0" layoutX="20.0" layoutY="36.0" pickOnBounds="true" preserveRatio="true" />
                      </children>
                   </AnchorPane>
                </children>

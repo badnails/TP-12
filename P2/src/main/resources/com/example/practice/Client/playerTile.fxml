@@ -6,50 +6,90 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.practice.Client.PlayerTileController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-radius: 10; -fx-background-color: lightblue;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.practice.Client.PlayerTileController">
    <children>
       <VBox layoutX="53.0" layoutY="100.0" spacing="10.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
          <children>
             <HBox spacing="10.0">
                <children>
-                  <Label text="Name:    " />
-                  <Label text="Label" />
+                  <Label text="Name:    ">
+                     <font>
+                        <Font name="HP Simplified" size="12.0" />
+                     </font></Label>
+                  <Label text="Label">
+                     <font>
+                        <Font name="HP Simplified" size="12.0" />
+                     </font></Label>
                </children>
             </HBox>
             <HBox spacing="10.0">
                <children>
-                  <Label text="Country: " />
-                  <Label text="Label" />
+                  <Label text="Country: ">
+                     <font>
+                        <Font name="HP Simplified" size="12.0" />
+                     </font></Label>
+                  <Label text="Label">
+                     <font>
+                        <Font name="HP Simplified" size="12.0" />
+                     </font></Label>
                </children>
             </HBox>
             <HBox spacing="10.0">
                <children>
-                  <Label text="Club:      " />
-                  <Label text="Label" />
+                  <Label text="Club:      ">
+                     <font>
+                        <Font name="HP Simplified" size="12.0" />
+                     </font></Label>
+                  <Label text="Label">
+                     <font>
+                        <Font name="HP Simplified" size="12.0" />
+                     </font></Label>
                </children>
             </HBox>
             <HBox spacing="10.0">
                <children>
-                  <Label text="Age:       " />
-                  <Label text="Label" />
+                  <Label text="Age:       ">
+                     <font>
+                        <Font name="HP Simplified" size="12.0" />
+                     </font></Label>
+                  <Label text="Label">
+                     <font>
+                        <Font name="HP Simplified" size="12.0" />
+                     </font></Label>
                </children>
             </HBox>
             <HBox spacing="10.0">
                <children>
-                  <Label text="Height:  " />
-                  <Label text="Label" />
+                  <Label text="Height:  ">
+                     <font>
+                        <Font name="HP Simplified" size="12.0" />
+                     </font></Label>
+                  <Label text="Label">
+                     <font>
+                        <Font name="HP Simplified" size="12.0" />
+                     </font></Label>
                </children>
             </HBox>
             <HBox spacing="10.0">
                <children>
-                  <Label text="Salary:   " />
-                  <Label text="Label" />
+                  <Label text="Salary:   ">
+                     <font>
+                        <Font name="HP Simplified" size="12.0" />
+                     </font></Label>
+                  <Label text="Label">
+                     <font>
+                        <Font name="HP Simplified" size="12.0" />
+                     </font></Label>
                </children>
             </HBox>
             <HBox spacing="10.0">
                <children>
-                  <Label text="Jersey:   " />
+                  <Label text="Jersey:   ">
+                     <font>
+                        <Font name="HP Simplified" size="12.0" />
+                     </font></Label>
                   <Label text="Label" />
                </children>
             </HBox>
@@ -58,6 +98,6 @@
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </padding>
       </VBox>
-      <Button fx:id="BUTTON_TILE_TRANSFER" layoutX="383.0" layoutY="182.0" mnemonicParsing="false" text="Sell" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" onAction="#transferPlayer"/>
+      <Button fx:id="BUTTON_TILE_TRANSFER" layoutX="383.0" layoutY="182.0" mnemonicParsing="false" onAction="#transferPlayer" text="Sell" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
    </children>
 </AnchorPane>

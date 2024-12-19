@@ -1,6 +1,5 @@
 package com.example.practice.Client;
 
-import com.example.practice.Server.Server;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class PlayerSearchMenuController implements Initializable {
+public class PlayerSearchMenuController extends ControllerWrapper implements Initializable {
     @FXML
     private ToggleButton TOGGLE_AGE_G, TOGGLE_AGE_L, TOGGLE_AGE_E, TOGGLE_H_G, TOGGLE_H_L, TOGGLE_H_E;
     @FXML
@@ -36,36 +35,47 @@ public class PlayerSearchMenuController implements Initializable {
     ToggleGroup group1 = new ToggleGroup();
     ToggleGroup group2 = new ToggleGroup();
 
+    public void searchPlayer(ActionEvent event) throws IOException {
+        listFiller(1);
+    }
 
-
-    private ArrayList<player> searchForPlayers()
+    private ArrayList<player> searchForPlayers(int mode)
     {
         String age_op;
         age_op = ((ToggleButton)group1.getSelectedToggle()).getText();
         String height_op;
         height_op = ((ToggleButton)group2.getSelectedToggle()).getText();
+        searchQuery query;
 
-        searchQuery query = new searchQuery(
-                TEXTBOX_SEARCH_NAME.getText().isEmpty()?null:TEXTBOX_SEARCH_NAME.getText(),
-                TEXTBOX_SEARCH_COUNTRY.getText().isEmpty()?null:TEXTBOX_SEARCH_COUNTRY.getText(),
-                TEXTBOX_SEARCH_AGE.getText().isEmpty()?null:(Integer) parseInput(TEXTBOX_SEARCH_AGE.getText()),
-                age_op,
-                TEXTBOX_SEARCH_LSAL.getText().isEmpty()?null:(Integer) parseInput(TEXTBOX_SEARCH_LSAL.getText()),
-                TEXTBOX_SEARCH_RSAL.getText().isEmpty()?null:(Integer) parseInput(TEXTBOX_SEARCH_RSAL.getText()),
-                TEXTBOX_SEARCH_POS.getText().isEmpty()?null:TEXTBOX_SEARCH_POS.getText(),
-                TEXTBOX_SEARCH_JN.getText().isEmpty()?null:(Integer) parseInput(TEXTBOX_SEARCH_JN.getText()),
-                TEXTBOX_SEARCH_HEIGHT.getText().isEmpty()?null:(Double) parseInput(TEXTBOX_SEARCH_HEIGHT.getText()),
-                height_op,
-                1//Club Search
-        );
-        searchQuery newQ;
+        if(mode==1)
+        {
+             query = new searchQuery(
+                    TEXTBOX_SEARCH_NAME.getText().isEmpty()?null:TEXTBOX_SEARCH_NAME.getText(),
+                    TEXTBOX_SEARCH_COUNTRY.getText().isEmpty()?null:TEXTBOX_SEARCH_COUNTRY.getText(),
+                    TEXTBOX_SEARCH_AGE.getText().isEmpty()?null:(Integer) parseInput(TEXTBOX_SEARCH_AGE.getText()),
+                    age_op,
+                    TEXTBOX_SEARCH_LSAL.getText().isEmpty()?null:(Integer) parseInput(TEXTBOX_SEARCH_LSAL.getText()),
+                    TEXTBOX_SEARCH_RSAL.getText().isEmpty()?null:(Integer) parseInput(TEXTBOX_SEARCH_RSAL.getText()),
+                    TEXTBOX_SEARCH_POS.getText().isEmpty()?null:TEXTBOX_SEARCH_POS.getText(),
+                    TEXTBOX_SEARCH_JN.getText().isEmpty()?null:(Integer) parseInput(TEXTBOX_SEARCH_JN.getText()),
+                    TEXTBOX_SEARCH_HEIGHT.getText().isEmpty()?null:(Double) parseInput(TEXTBOX_SEARCH_HEIGHT.getText()),
+                    height_op,
+                    1//Club Search
+            );
+            Client.lastSearchQ = query;
+        }
+        else
+        {
+            query = Client.lastSearchQ;
+        }
+
         try {
             query.setFrom("Client");
             Client.socket.reset();
             Client.socket.write(query);
-            newQ = (searchQuery) Client.socket.read();
-            System.out.println(newQ.getFrom());
-            for(player temp: newQ.getResults())
+            query = (searchQuery) Client.socket.read();
+            System.out.println(query.getFrom());
+            for(player temp: query.getResults())
             {
                 System.out.println(temp.getName()+" "+temp.isTransferListed());
             }
@@ -74,13 +84,12 @@ public class PlayerSearchMenuController implements Initializable {
             throw new RuntimeException(e);
         }
 
-        return newQ.getResults();
+        return query.getResults();
     }
 
-
-    public void searchPlayer(ActionEvent event) throws IOException {
+    public void listFiller(int mode) throws IOException {
         psl.getItems().clear();
-        ArrayList<player> found = searchForPlayers();
+        ArrayList<player> found = searchForPlayers(mode);
         TEXT_SEARCH_FOUND_NUMBER.setText(String.format("Found: %d Players", found.size()));
 
         if (!found.isEmpty()) {
@@ -169,6 +178,19 @@ public class PlayerSearchMenuController implements Initializable {
         TEXTBOX_SEARCH_HEIGHT.clear();
         TOGGLE_H_G.setSelected(true);
         TOGGLE_AGE_G.setSelected(true);
+    }
+
+    @Override
+    public void refresh()
+    {
+        try
+        {
+            listFiller(0);
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override

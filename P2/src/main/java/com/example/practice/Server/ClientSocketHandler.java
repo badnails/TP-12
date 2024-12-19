@@ -1,15 +1,17 @@
 package com.example.practice.Server;
 
+import com.example.practice.Database.club;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 public class ClientSocketHandler {
-    private Socket clientSocket;
-    private String clubName;
-    private ObjectOutputStream out;
-    private ObjectInputStream in;
+    private final Socket clientSocket;
+    private club clubObject;
+    private final ObjectOutputStream out;
+    private final ObjectInputStream in;
 
 
     public ClientSocketHandler(String host, int port) throws IOException {
@@ -24,7 +26,7 @@ public class ClientSocketHandler {
         in = new ObjectInputStream(clientSocket.getInputStream());
     }
 
-    public void write(Object obj) throws IOException
+    synchronized public void write(Object obj) throws IOException
     {
         out.writeObject(obj);
     }
@@ -33,11 +35,11 @@ public class ClientSocketHandler {
         return in.readObject();
     }
 
-    public void setClubName(String clubName) {
-        this.clubName = clubName;
+    public void setClubObject(club clubObject) {
+        this.clubObject = clubObject;
     }
-    public String getClubName() {
-        return clubName;
+    public club getClubObject() {
+        return clubObject;
     }
 
     public void reset() throws IOException {

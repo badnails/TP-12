@@ -1,26 +1,26 @@
 package com.example.practice.Requests;
 
+import com.example.practice.Database.club;
+
 import java.io.Serializable;
 
 public class AuthRequest implements Serializable {
-    String clubName;
-    String password;
+    String credName;
+    String credPass;
+    club clubObject;
     String error;
     boolean authenticated;
 
 
     public AuthRequest(String clubName, String password) {
-        this.clubName = clubName;
-        this.password = password;
+        this.credName = clubName;
+        this.credPass = password;
     }
-    public void setClubName(String clubName) {
-        this.clubName = clubName;
+    public String getCredName() {
+        return credName;
     }
-    public String getClubName() {
-        return clubName;
-    }
-    public String getPassword() {
-        return password;
+    public String getCredPass() {
+        return credPass;
     }
     public void setAuthenticated(boolean authenticated) {
         this.authenticated = authenticated;
@@ -33,5 +33,11 @@ public class AuthRequest implements Serializable {
     }
     public String getError() {
         return error;
+    }
+    public void setClubObject(club clubObject) {
+        this.clubObject = clubObject;
+    }
+    public club getClubObject() {
+        return clubObject;
     }
 }
